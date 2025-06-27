@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodorama</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=filter_alt"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.5.3/dist/protobuf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="header-main">
+        <button
+          id="filter-toggle-btn"
+          aria-label="Toggle filter menu"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined">filter_alt</span>
+        </button>
+
+        <h1>dodorama</h1>
+
+        <button
+          id="menu-toggle-btn"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div id="filter-menu-container">
+        <div class="filter-menu-controls">
+          <input type="text" id="search-input" placeholder="劇名或主演" />
+          <select id="start-year-input">
+            <option value="">起始年份</option>
+          </select>
+          <span class="year-range-separator">至</span>
+          <select id="end-year-input">
+            <option value="">結束年份</option>
+          </select>
+          <button id="reset-button">重設</button>
+          <button id="filter-confirm-button">確認</button>
+        </div>
+      </div>
+
+      <div id="filters-container">
+        <div class="filter-controls">
+          <button id="clear-highlights-btn">清除標記</button>
+          <button id="share-button">🖼️ 產生清單圖片</button>
+
+          <div class="dropdown-container">
+            <label for="data-source-dropdown" class="dropdown-label"
+              >資料集</label
+            >
+            <select id="data-source-dropdown">
+              <option value="dorama_info.txtpb">全部</option>
+              <option value="top_5_lt_2000_dorama_info.txtpb">
+                每年 Top 5 (2000年前)
+              </option>
+              <option value="top_5_ge_2000_dorama_info.txtpb">
+                每年 Top 5 (2000年起)
+              </option>
+              <option value="top_100_dorama_info.txtpb">Top 100 總榜</option>
+            </select>
+          </div>
+
+          <div class="toggle-switch-container">
+            <label for="actors-toggle" class="toggle-label">顯示主演</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="actors-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-container">
+        <p id="share-status"></p>
+      </div>
+
+      <div id="active-filter-display" class="active-filter-container"></div>
+
+      <div id="status-message"></div>
+    </header>
+
+    <main id="main-content">
+      <div id="dorama-grid"></div>
+    </main>
+
+    <div id="image-preview-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div class="modal-actions">
+          <div>
+            <button id="modal-copy-btn">複製圖片</button>
+            <button id="modal-download-btn">下載圖片</button>
+          </div>
+          <span id="modal-close-btn" class="modal-close">&times;</span>
+        </div>
+        <div id="modal-image-container"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

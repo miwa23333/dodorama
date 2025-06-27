@@ -1,0 +1,16 @@
+// dorama_info.proto
+syntax = "proto3";
+
+package dorama;
+
+message Dorama {
+  string chinese_title = 1;
+  string japanese_title = 2;
+  int32 release_year = 3;
+  repeated string main_actor = 4;
+  int32 dorama_info_id = 5;
+  optional int32 comment = 6;
+  optional int32 dorama_info_visit_cnt = 7;
+}
+
+message DoramaInfo { repeated Dorama doramas = 1; }

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "types": [],
+    "outDir": "dist",
+    "composite": true,
+    "lib": ["DOM", "ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "files": ["app.js", "global.d.ts"]
+}
