@@ -368,6 +368,83 @@ main {
   background-color: #218838;
 }
 
+.filter-controls button#export-csv-btn {
+  background-color: #17a2b8;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.7rem 1rem;
+}
+
+.filter-controls button#export-csv-btn:hover {
+  background-color: #138496;
+}
+
+.filter-controls button#import-csv-btn {
+  background-color: #6f42c1;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.7rem 1rem;
+}
+
+.filter-controls button#import-csv-btn:hover {
+  background-color: #5a2d91;
+}
+
+/* --- File Input Wrapper Styles --- */
+.file-input-wrapper {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.filter-controls #import-csv-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #6f42c1;
+  border: 1px solid #6f42c1;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  margin: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  min-height: 2.4rem;
+  line-height: 1.2;
+}
+
+.filter-controls #import-csv-label:hover {
+  background-color: #5a2d91;
+  border-color: #5a2d91;
+}
+
+.filter-controls #import-csv-label:active {
+  transform: translateY(1px);
+}
+
+/* Focus styles for accessibility */
+.file-input-wrapper input[type="file"]:focus + label {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
 /* --- Styles for the Toggle Switch --- */
 .toggle-switch-container {
   display: flex;
@@ -484,6 +561,15 @@ input:checked + .slider:before {
   padding: 0.5rem 1rem;
   border-radius: 20px;
   border: 1px solid #bce0ff;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.active-filter-pill.dataset-info {
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  font-weight: 500;
 }
 
 .clear-filter-btn,
@@ -527,7 +613,7 @@ input:checked + .slider:before {
     padding: 0;
     background-color: #f4f4f9;
     color: #333;
-    overflow-x: hidden; 
+    overflow-x: hidden;
   }
 
   header.filters-open {
@@ -627,6 +713,16 @@ input:checked + .slider:before {
   .filter-controls input,
   .filter-controls select,
   .filter-controls button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .filter-controls .file-input-wrapper {
+    width: 100%;
+  }
+
+  .filter-controls #import-csv-label {
     width: 100%;
     font-size: 1rem;
     padding: 0.8rem 1rem;
@@ -808,4 +904,99 @@ input:checked + .slider:before {
 
 body.modal-open {
   overflow: hidden;
+}
+
+/* --- Custom Dialog Modal Styles --- */
+.dialog-modal {
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem 1rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dialog-body {
+  padding: 1.5rem 2rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dialog-body p {
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+  white-space: pre-line;
+}
+
+.dialog-actions {
+  padding: 1rem 2rem 1.5rem 2rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+#dialog-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.dialog-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.dialog-btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.dialog-btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.dialog-btn-secondary {
+  background-color: #28a745;
+  color: white;
+}
+
+.dialog-btn-secondary:hover {
+  background-color: #218838;
+}
+
+.dialog-btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.dialog-btn-danger:hover {
+  background-color: #c82333;
+}
+
+.dialog-btn-light {
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.dialog-btn-light:hover {
+  background-color: #e9ecef;
 }

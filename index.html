@@ -63,6 +63,11 @@
         <div class="filter-controls">
           <button id="clear-highlights-btn">清除標記</button>
           <button id="share-button">🖼️ 產生清單圖片</button>
+          <button id="export-csv-btn">📥 匯出 CSV</button>
+          <div class="file-input-wrapper">
+            <input type="file" id="import-csv-input" />
+            <label for="import-csv-input" id="import-csv-label">📤 匯入 CSV</label>
+          </div>
 
           <div class="dropdown-container">
             <label for="data-source-dropdown" class="dropdown-label"
@@ -113,6 +118,22 @@
           <span id="modal-close-btn" class="modal-close">&times;</span>
         </div>
         <div id="modal-image-container"></div>
+      </div>
+    </div>
+
+    <!-- Custom Dialog Modal -->
+    <div id="custom-dialog-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content dialog-modal">
+        <div class="dialog-header">
+          <h3 id="dialog-title"></h3>
+          <span id="dialog-close-btn" class="modal-close">&times;</span>
+        </div>
+        <div class="dialog-body">
+          <p id="dialog-message"></p>
+        </div>
+        <div class="dialog-actions">
+          <div id="dialog-buttons"></div>
+        </div>
       </div>
     </div>
 
