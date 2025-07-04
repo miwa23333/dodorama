@@ -195,34 +195,49 @@ function generateTop5PerYearChecklistImage(doramas, highlightedIds, title) {
 
   const sortedYears = Object.keys(groupedByYear).sort((a, b) => b - a);
 
+  // Determine if this is Top 5 data (max 5 per year) or general data
+  const maxDoramasPerYear = Math.max(...Object.values(groupedByYear).map(arr => arr.length));
+  const isTop5Data = maxDoramasPerYear <= 5;
+  const doramasPerRow = isTop5Data ? 5 : 6; // Use 5 columns for Top 5, 6 for general data
+
   let contentHtml = `<h2 style="text-align: center; color: #333; font-size: 48px; font-weight: 700; margin: 0 0 30px 0;">${title}</h2>`;
 
   contentHtml += `<table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 8px;">`;
 
   sortedYears.forEach((year) => {
     const yearDoramas = groupedByYear[year];
-    contentHtml += `<tr style="height: 80px;">`;
+    const rows = Math.ceil(yearDoramas.length / doramasPerRow);
 
-    // Year header as first cell in the row (fixed width)
-    const yearCellStyle = `width: 120px; padding: 10px 8px; font-size: 20px; font-weight: 700; border-radius: 5px; text-align: center; vertical-align: middle; background-color: #64748b; color: white; border: 1px solid #475569;`;
-    contentHtml += `<td style="${yearCellStyle}">${year}</td>`;
+    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+      contentHtml += `<tr style="height: 80px;">`;
 
-    // Doramas in the same row (equal width columns)
-    const doramaColumnWidth = (100 - 12) / 5; // 12% for year column, remaining divided by 5
-    yearDoramas.forEach((dorama) => {
-      const isSeen = highlightedIds.has(String(dorama.doramaInfoId));
-      const seenStyle = `background-color: #10b981; color: white; border: 1px solid #059669; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);`;
-      const unseenStyle = `background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0;`;
-      const cellStyle = `width: ${doramaColumnWidth}%; padding: 10px 8px; font-size: 17px; font-weight: 600; border-radius: 5px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; ${isSeen ? seenStyle : unseenStyle}`;
-      contentHtml += `<td style="${cellStyle}">${dorama.chineseTitle}</td>`;
-    });
+      // Year header only on the first row for this year
+      if (rowIndex === 0) {
+        const yearCellStyle = `width: 120px; padding: 10px 8px; font-size: 20px; font-weight: 700; border-radius: 5px; text-align: center; vertical-align: middle; background-color: #64748b; color: white; border: 1px solid #475569; ${rows > 1 ? 'vertical-align: top; padding-top: 25px;' : ''}`;
+        contentHtml += `<td rowspan="${rows}" style="${yearCellStyle}">${year}</td>`;
+      }
 
-    // Fill empty cells if less than 5 doramas
-    for (let i = yearDoramas.length; i < 5; i++) {
-      contentHtml += `<td style="width: ${doramaColumnWidth}%;"></td>`;
+      // Doramas for this row
+      const startIndex = rowIndex * doramasPerRow;
+      const endIndex = Math.min(startIndex + doramasPerRow, yearDoramas.length);
+      const doramaColumnWidth = (100 - 12) / doramasPerRow; // 12% for year column, remaining divided by doramasPerRow
+
+      for (let i = startIndex; i < endIndex; i++) {
+        const dorama = yearDoramas[i];
+        const isSeen = highlightedIds.has(String(dorama.doramaInfoId));
+        const seenStyle = `background-color: #10b981; color: white; border: 1px solid #059669; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);`;
+        const unseenStyle = `background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0;`;
+        const cellStyle = `width: ${doramaColumnWidth}%; padding: 10px 8px; font-size: 17px; font-weight: 600; border-radius: 5px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; ${isSeen ? seenStyle : unseenStyle}`;
+        contentHtml += `<td style="${cellStyle}">${dorama.chineseTitle}</td>`;
+      }
+
+      // Fill empty cells if less than doramasPerRow doramas in this row
+      for (let i = endIndex - startIndex; i < doramasPerRow; i++) {
+        contentHtml += `<td style="width: ${doramaColumnWidth}%;"></td>`;
+      }
+
+      contentHtml += `</tr>`;
     }
-
-    contentHtml += `</tr>`;
   });
 
   contentHtml += `</table><p style="text-align: right; margin-top: 25px; font-size: 18px; font-weight: 600; color: #999;">由 dodorama 產生</p>`;
@@ -939,12 +954,10 @@ function setupEventListeners() {
           highlightedIds.has(String(dorama.doramaInfoId)),
         );
         downloadFilename = `my_watched_doramas_${highlightedDoramas.length}.png`;
-        imageContainer = generateDataSourceChecklistImage(
+        imageContainer = generateTop5PerYearChecklistImage(
           highlightedDoramas,
           highlightedIds,
           `日劇觀看清單 (${highlightedDoramas.length} 部)`,
-          8, // Use 8 columns for a good layout
-          false, // Don't show checkmarks
         );
       } else if (currentDataSourceFile !== "dorama_info.txtpb") {
         const dataSourceConfig = {
