@@ -1793,7 +1793,6 @@ async function loadDoramaInfo(dataSourceFile) {
 document.addEventListener("DOMContentLoaded", () => {
   // Setup responsive header and UI components
   setupResponsiveHeader();
-  initializeDataSourceDropdown();
   initializeActorToggle();
 
   // Setup all event listeners (only once)
@@ -1828,6 +1827,9 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     currentDataSourceFile = "dorama_info.txtpb";
   }
+
+  // Initialize dropdown after determining data source
+  initializeDataSourceDropdown();
 
   // Load the dorama data
   loadDoramaInfo(currentDataSourceFile);
