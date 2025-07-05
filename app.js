@@ -76,7 +76,8 @@ function updatePersistedHighlights(doramaId, isHighlighted) {
 }
 
 // --- Module-level variables ---
-let allDoramas = [];
+let allDoramas = []; // For the currently displayed dataset
+let completeDoramaDataset = []; // START: New variable for the "全部" dataset
 let currentDataSourceFile = "";
 let activeActorFilter = "";
 let searchTerm = "";
@@ -163,6 +164,265 @@ function showConfirm(title, message) {
   ]);
 }
 
+// --- Fuzzy Matching and File Parsing Logic ---
+
+/**
+ * Calculates the Levenshtein distance between two strings.
+ * @param {string} a The first string.
+ * @param {string} b The second string.
+ * @returns {number} The Levenshtein distance.
+ */
+function levenshteinDistance(a, b) {
+  const an = a ? a.length : 0;
+  const bn = b ? b.length : 0;
+  if (an === 0) return bn;
+  if (bn === 0) return an;
+  const matrix = Array(an + 1);
+  for (let i = 0; i <= an; i++) matrix[i] = Array(bn + 1);
+  for (let i = 0; i <= an; i++) matrix[i][0] = i;
+  for (let j = 0; j <= bn; j++) matrix[0][j] = j;
+  for (let i = 1; i <= an; i++) {
+    for (let j = 1; j <= bn; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,      // Deletion
+        matrix[i][j - 1] + 1,      // Insertion
+        matrix[i - 1][j - 1] + cost // Substitution
+      );
+    }
+  }
+  return matrix[an][bn];
+}
+
+/**
+ * START: New function to load the complete dataset if it's not already loaded.
+ * This ensures we have all doramas available for matching.
+ */
+async function ensureCompleteDatasetIsLoaded() {
+    if (completeDoramaDataset.length > 0) {
+        return; // Already loaded
+    }
+
+    const statusDiv = document.getElementById("share-status");
+    try {
+        statusDiv.textContent = '首次解析：正在載入完整資料庫...';
+        const protoResponse = await fetch("dorama_info.proto");
+        const protoContent = await protoResponse.text();
+        const root = protobuf.parse(protoContent).root;
+        const DoramaInfoMessage = root.lookupType("dorama.DoramaInfo");
+
+        const textprotoResponse = await fetch("dorama_info.txtpb");
+        const textprotoContent = await textprotoResponse.text();
+
+        const plainJsObject = parseTextprotoToJsObject(textprotoContent);
+        const camelCaseObject = convertKeysToCamelCase(plainJsObject);
+        const doramaInfoInstance = DoramaInfoMessage.fromObject(camelCaseObject);
+        
+        completeDoramaDataset = doramaInfoInstance.doramas || [];
+        statusDiv.textContent = '完整資料庫載入完畢。';
+        setTimeout(() => { statusDiv.textContent = ''; }, 3000);
+
+    } catch (error) {
+        console.error("無法載入完整資料庫進行比對:", error);
+        showAlert("比對錯誤", "無法載入完整資料庫，請稍後再試。");
+        statusDiv.textContent = '';
+        throw error; // Propagate error to stop the parsing process
+    }
+}
+// END: New function
+
+/**
+ * Finds the best fuzzy matches for a query string from a given dataset.
+ * @param {string} query The string to match.
+ * @param {Array} dataset The dorama dataset to search within. // START: Updated parameter
+ * @returns {Array} A sorted list of match objects { dorama, score }.
+ */
+function findFuzzyMatches(query, dataset) { // START: Updated signature
+  const normalizedQuery = query.toLowerCase();
+  const matches = [];
+  const threshold = 0.6;
+
+  // Use the provided dataset for matching
+  dataset.forEach(dorama => { // START: Use the 'dataset' parameter
+    const titles = [dorama.chineseTitle, dorama.japaneseTitle].filter(Boolean);
+    let bestScore = 0;
+
+    titles.forEach(title => {
+      const normalizedTitle = title.toLowerCase();
+      const distance = levenshteinDistance(normalizedQuery, normalizedTitle);
+      const score = 1 - (distance / Math.max(normalizedQuery.length, normalizedTitle.length));
+
+      if (score > bestScore) {
+        bestScore = score;
+      }
+    });
+
+    if (bestScore >= threshold) {
+      matches.push({ dorama, score: bestScore });
+    }
+  });
+
+  return matches.sort((a, b) => b.score - a.score).slice(0, 5);
+}
+
+/**
+ * Handles the file parsing process. Now ensures the complete dataset is loaded
+ * before performing a fuzzy match against it.
+ * @param {File} file The file uploaded by the user.
+ */
+async function handleFileParse(file) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+        try {
+            // START: Ensure complete dataset is loaded before proceeding
+            await ensureCompleteDatasetIsLoaded();
+            // END
+
+            const content = e.target.result;
+            let queries = [];
+
+            if (content.includes(',')) {
+                const lines = content.split('\n');
+                const allFields = lines.flatMap(line => parseCSVLine(line));
+                queries = allFields.map(field => field.trim()).filter(Boolean);
+            } else {
+                queries = content.split('\n').map(line => line.trim()).filter(Boolean);
+            }
+
+            if (queries.length === 0) {
+                await showAlert("檔案錯誤", "檔案為空或無法解析出有效內容。");
+                return;
+            }
+
+            const results = queries.map(query => ({
+                original: query,
+                // START: Pass the complete dataset to the matching function
+                matches: findFuzzyMatches(query, completeDoramaDataset)
+                // END
+            }));
+
+            showFuzzyMatchReviewModal(results);
+
+        } catch (error) {
+            // Error handling is managed within ensureCompleteDatasetIsLoaded
+            // so we just need to stop the process here.
+            console.log("停止解析，因為無法載入完整資料庫。");
+        }
+    };
+
+    reader.onerror = async () => {
+        await showAlert("讀取錯誤", "讀取檔案時發生錯誤。");
+    };
+
+    reader.readAsText(file);
+}
+
+
+/**
+ * Displays a modal for the user to review and confirm fuzzy matches.
+ * @param {Array} results The matching results to display.
+ */
+function showFuzzyMatchReviewModal(results) {
+    const modal = document.getElementById('fuzzy-match-modal');
+    const body = document.getElementById('fuzzy-match-body');
+    const buttonsContainer = document.getElementById('fuzzy-match-buttons');
+    const closeBtn = document.getElementById('fuzzy-match-close-btn');
+    
+    body.innerHTML = ''; // Clear previous content
+
+    results.forEach((result, index) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'fuzzy-match-item';
+
+        let optionsHtml = '';
+        if (result.matches.length > 0) {
+            result.matches.forEach(match => {
+                optionsHtml += `
+                    <label class="fuzzy-match-option">
+                        <input type="radio" name="match-group-${index}" value="${match.dorama.doramaInfoId}">
+                        <span class="match-details">
+                            <span class="title">${match.dorama.chineseTitle} (${match.dorama.japaneseTitle})</span>
+                            <span class="year">${match.dorama.releaseYear}</span>
+                            <span class="score">(相似度: ${Math.round(match.score * 100)}%)</span>
+                        </span>
+                    </label>
+                `;
+            });
+        } else {
+            optionsHtml = '<p class="no-match-found">找不到可能的比對結果。</p>';
+        }
+
+        itemEl.innerHTML = `
+            <div class="fuzzy-match-original-text">
+                解析文字: <span>"${result.original}"</span>
+            </div>
+            <div class="fuzzy-match-options-container">
+                ${optionsHtml}
+                <label class="fuzzy-match-option">
+                    <input type="radio" name="match-group-${index}" value="reject" checked>
+                    <span>忽略此項目</span>
+                </label>
+            </div>
+        `;
+        body.appendChild(itemEl);
+    });
+    
+    // Add listeners to visually indicate selection
+    body.querySelectorAll('.fuzzy-match-option input').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const groupName = e.target.name;
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+                r.closest('.fuzzy-match-option').classList.remove('selected');
+            });
+            e.target.closest('.fuzzy-match-option').classList.add('selected');
+        });
+    });
+
+    // Setup modal buttons
+    buttonsContainer.innerHTML = `
+        <button id="confirm-matches-btn" class="dialog-btn dialog-btn-primary">確認並合併標記</button>
+        <button id="cancel-matches-btn" class="dialog-btn dialog-btn-light">取消</button>
+    `;
+
+    const closeDialog = () => {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    };
+
+    document.getElementById('confirm-matches-btn').onclick = () => {
+        const selectedIds = new Set();
+        results.forEach((_, index) => {
+            const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
+            if (selectedRadio && selectedRadio.value !== 'reject') {
+                selectedIds.add(selectedRadio.value);
+            }
+        });
+
+        if (selectedIds.size > 0) {
+            const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+            const mergedIds = [...new Set([...existingHighlightedIds, ...Array.from(selectedIds)])];
+            localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
+            
+            // Re-apply all highlights
+            applyAllFilters(); 
+            
+            const shareStatus = document.getElementById("share-status");
+            shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
+            setTimeout(() => { shareStatus.textContent = ""; }, 4000);
+        }
+        
+        closeDialog();
+    };
+
+    document.getElementById('cancel-matches-btn').onclick = closeDialog;
+    closeBtn.onclick = closeDialog;
+
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+}
+
+
 // --- CSV Import/Export Functions ---
 async function exportHighlightedDoramasToCSV() {
   const highlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
@@ -172,30 +432,10 @@ async function exportHighlightedDoramasToCSV() {
     return;
   }
 
-    // Get highlighted doramas from full dataset (not current view)
-  // We need to load the full dataset to find all highlighted doramas
-  let fullDatasetDoramas = allDoramas;
+  // Ensure the complete dataset is available for export
+  await ensureCompleteDatasetIsLoaded();
+  let fullDatasetDoramas = completeDoramaDataset;
 
-  // If current dataset is not the full one, we need to load it
-  if (currentDataSourceFile !== "dorama_info.txtpb") {
-    try {
-      const protoResponse = await fetch("dorama_info.proto");
-      const protoContent = await protoResponse.text();
-      const root = protobuf.parse(protoContent).root;
-      const DoramaInfoMessage = root.lookupType("dorama.DoramaInfo");
-
-      const textprotoResponse = await fetch("dorama_info.txtpb");
-      const textprotoContent = await textprotoResponse.text();
-      const plainJsObject = parseTextprotoToJsObject(textprotoContent);
-      const camelCaseObject = convertKeysToCamelCase(plainJsObject);
-      const doramaInfoInstance = DoramaInfoMessage.fromObject(camelCaseObject);
-      fullDatasetDoramas = doramaInfoInstance.doramas || [];
-    } catch (error) {
-      console.error("Failed to load full dataset for export:", error);
-      await showAlert("匯出錯誤", "無法載入完整資料集進行匯出");
-      return;
-    }
-  }
 
   const highlightedDoramas = fullDatasetDoramas.filter(dorama =>
     highlightedIds.includes(String(dorama.doramaInfoId))
@@ -317,29 +557,10 @@ async function validateCSVContent(csvText) {
     }
   }
 
-  // Validate data rows against full dataset
-  // We need the full dataset to validate all possible dorama IDs
-  let fullDatasetDoramas = allDoramas;
+  // Ensure complete dataset is available for validation
+  await ensureCompleteDatasetIsLoaded();
+  const fullDatasetDoramas = completeDoramaDataset;
 
-  // If current dataset is not the full one, we need to load it for validation
-  if (currentDataSourceFile !== "dorama_info.txtpb") {
-    try {
-      const protoResponse = await fetch("dorama_info.proto");
-      const protoContent = await protoResponse.text();
-      const root = protobuf.parse(protoContent).root;
-      const DoramaInfoMessage = root.lookupType("dorama.DoramaInfo");
-
-      const textprotoResponse = await fetch("dorama_info.txtpb");
-      const textprotoContent = await textprotoResponse.text();
-      const plainJsObject = parseTextprotoToJsObject(textprotoContent);
-      const camelCaseObject = convertKeysToCamelCase(plainJsObject);
-      const doramaInfoInstance = DoramaInfoMessage.fromObject(camelCaseObject);
-      fullDatasetDoramas = doramaInfoInstance.doramas || [];
-    } catch (error) {
-      console.error("Failed to load full dataset for validation:", error);
-      return { valid: false, error: "無法載入完整資料集進行驗證" };
-    }
-  }
 
   const validDoramaIds = new Set(fullDatasetDoramas.map(d => String(d.doramaInfoId)));
   const importedIds = [];
@@ -1388,8 +1609,9 @@ function setupResponsiveHeader() {
           filterToggleBtn.setAttribute("aria-expanded", "false");
       }
       if (header.classList.contains("filters-open")) {
-        header.classList.remove("filters-open");
-        if (menuToggleBtn) menuToggleBtn.setAttribute("aria-expanded", "false");
+        header.classList.remove("filter-menu-open");
+        if (menuToggleBtn)
+          menuToggleBtn.setAttribute("aria-expanded", "false");
       }
     }
   });
@@ -1596,6 +1818,18 @@ function setupEventListeners() {
       event.target.value = '';
     });
   }
+  
+    // Event listener for the parse file button
+    const parseFileInput = document.getElementById("parse-file-input");
+    if (parseFileInput) {
+        parseFileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                handleFileParse(file);
+            }
+            event.target.value = ''; // Reset input
+        });
+    }
 
   const shareButton = document.getElementById("share-button");
   const shareStatus = document.getElementById("share-status");
@@ -1770,7 +2004,6 @@ async function loadDoramaInfo(dataSourceFile) {
       throw new Error(`檔案 '${dataSourceFile}' 為空或無效`);
     }
 
-    // FIX: Changed variable from the incorrect 'textprotoString' to the correct 'textprotoContent'
     const plainJsObject = parseTextprotoToJsObject(textprotoContent);
 
     const camelCaseObject = convertKeysToCamelCase(plainJsObject);

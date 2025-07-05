@@ -68,7 +68,10 @@
             <input type="file" id="import-csv-input" />
             <label for="import-csv-input" id="import-csv-label">📤 匯入 CSV</label>
           </div>
-
+          <div class="file-input-wrapper">
+            <input type="file" id="parse-file-input"/>
+            <label for="parse-file-input" id="parse-file-label">📑 解析檔案</label>
+          </div>
           <div class="dropdown-container">
             <label for="data-source-dropdown" class="dropdown-label"
               >資料集</label
@@ -121,7 +124,6 @@
       </div>
     </div>
 
-    <!-- Custom Dialog Modal -->
     <div id="custom-dialog-modal" class="modal-overlay" style="display: none">
       <div class="modal-content dialog-modal">
         <div class="dialog-header">
@@ -137,6 +139,20 @@
       </div>
     </div>
 
+    <div id="fuzzy-match-modal" class="modal-overlay" style="display: none;">
+      <div class="modal-content fuzzy-match-review-modal">
+        <div class="dialog-header">
+          <h3 id="fuzzy-match-title">比對結果審核</h3>
+          <span id="fuzzy-match-close-btn" class="modal-close">&times;</span>
+        </div>
+        <div id="fuzzy-match-body" class="dialog-body">
+          </div>
+        <div class="dialog-actions">
+          <div id="fuzzy-match-buttons">
+            </div>
+        </div>
+      </div>
+    </div>
     <footer
       style="
         text-align: center;

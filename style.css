@@ -407,7 +407,8 @@ main {
   white-space: nowrap;
 }
 
-.filter-controls #import-csv-label {
+.filter-controls #import-csv-label,
+.filter-controls #parse-file-label { /* START: Added new label */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -430,12 +431,24 @@ main {
   line-height: 1.2;
 }
 
+.filter-controls #parse-file-label {
+  background-color: #fd7e14; /* Orange color for distinction */
+  border-color: #fd7e14;
+}
+
 .filter-controls #import-csv-label:hover {
   background-color: #5a2d91;
   border-color: #5a2d91;
 }
 
-.filter-controls #import-csv-label:active {
+.filter-controls #parse-file-label:hover {
+  background-color: #e86a02;
+  border-color: #e86a02;
+}
+
+
+.filter-controls #import-csv-label:active,
+.filter-controls #parse-file-label:active { /* START: Added new label */
   transform: translateY(1px);
 }
 
@@ -722,7 +735,8 @@ input:checked + .slider:before {
     width: 100%;
   }
 
-  .filter-controls #import-csv-label {
+  .filter-controls #import-csv-label,
+  .filter-controls #parse-file-label {
     width: 100%;
     font-size: 1rem;
     padding: 0.8rem 1rem;
@@ -1000,3 +1014,93 @@ body.modal-open {
 .dialog-btn-light:hover {
   background-color: #e9ecef;
 }
+
+/* START: New styles for the Fuzzy Match Review Modal */
+.fuzzy-match-review-modal {
+  max-width: 800px;
+  width: 90%;
+}
+
+#fuzzy-match-body {
+  max-height: 60vh;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.fuzzy-match-item {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.fuzzy-match-item:last-child {
+  margin-bottom: 0;
+}
+
+.fuzzy-match-original-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+.fuzzy-match-original-text span {
+  font-weight: normal;
+  color: #666;
+  font-style: italic;
+}
+
+.fuzzy-match-options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fuzzy-match-option {
+  display: block;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fuzzy-match-option:hover {
+  background-color: #f0f8ff;
+  border-color: #007bff;
+}
+
+.fuzzy-match-option input[type="radio"] {
+  margin-right: 10px;
+}
+
+.fuzzy-match-option.selected {
+  background-color: #e0f2fe;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.match-details .title {
+  font-weight: 600;
+  color: #0056b3;
+}
+.match-details .year {
+  color: #555;
+  margin-left: 8px;
+}
+.match-details .score {
+  font-size: 0.8rem;
+  color: #28a745;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.no-match-found {
+  color: #dc3545;
+  font-style: italic;
+}
+/* END: New styles for the Fuzzy Match Review Modal */
