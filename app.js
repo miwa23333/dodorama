@@ -217,7 +217,7 @@ async function ensureCompleteDatasetIsLoaded() {
         const plainJsObject = parseTextprotoToJsObject(textprotoContent);
         const camelCaseObject = convertKeysToCamelCase(plainJsObject);
         const doramaInfoInstance = DoramaInfoMessage.fromObject(camelCaseObject);
-        
+
         completeDoramaDataset = doramaInfoInstance.doramas || [];
         statusDiv.textContent = '完整資料庫載入完畢。';
         setTimeout(() => { statusDiv.textContent = ''; }, 3000);
@@ -328,7 +328,7 @@ function showFuzzyMatchReviewModal(results) {
     const body = document.getElementById('fuzzy-match-body');
     const buttonsContainer = document.getElementById('fuzzy-match-buttons');
     const closeBtn = document.getElementById('fuzzy-match-close-btn');
-    
+
     body.innerHTML = ''; // Clear previous content
 
     results.forEach((result, index) => {
@@ -340,7 +340,7 @@ function showFuzzyMatchReviewModal(results) {
             result.matches.forEach(match => {
                 optionsHtml += `
                     <label class="fuzzy-match-option">
-                        <input type="radio" name="match-group-${index}" value="${match.dorama.doramaInfoId}">
+                        <input type="radio" name="match-group-${index}" value="${match.dorama.id}">
                         <span class="match-details">
                             <span class="title">${match.dorama.chineseTitle} (${match.dorama.japaneseTitle})</span>
                             <span class="year">${match.dorama.releaseYear}</span>
@@ -367,7 +367,7 @@ function showFuzzyMatchReviewModal(results) {
         `;
         body.appendChild(itemEl);
     });
-    
+
     // Add listeners to visually indicate selection
     body.querySelectorAll('.fuzzy-match-option input').forEach(radio => {
         radio.addEventListener('change', (e) => {
@@ -403,15 +403,15 @@ function showFuzzyMatchReviewModal(results) {
             const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
             const mergedIds = [...new Set([...existingHighlightedIds, ...Array.from(selectedIds)])];
             localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
-            
+
             // Re-apply all highlights
-            applyAllFilters(); 
-            
+            applyAllFilters();
+
             const shareStatus = document.getElementById("share-status");
             shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
             setTimeout(() => { shareStatus.textContent = ""; }, 4000);
         }
-        
+
         closeDialog();
     };
 
@@ -423,9 +423,15 @@ function showFuzzyMatchReviewModal(results) {
 }
 
 
+// --- Helper function to get highlighted IDs with migration ---
+async function getHighlightedIds() {
+  await migrateHighlightData();
+  return JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+}
+
 // --- CSV Import/Export Functions ---
 async function exportHighlightedDoramasToCSV() {
-  const highlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+  const highlightedIds = await getHighlightedIds();
 
   if (highlightedIds.length === 0) {
     await showAlert("匯出錯誤", "沒有已標記日劇可以匯出");
@@ -436,9 +442,9 @@ async function exportHighlightedDoramasToCSV() {
   await ensureCompleteDatasetIsLoaded();
   let fullDatasetDoramas = completeDoramaDataset;
 
-
+  // Use the new id field for filtering
   const highlightedDoramas = fullDatasetDoramas.filter(dorama =>
-    highlightedIds.includes(String(dorama.doramaInfoId))
+    highlightedIds.includes(String(dorama.id))
   );
 
   if (highlightedDoramas.length === 0) {
@@ -457,7 +463,7 @@ async function exportHighlightedDoramasToCSV() {
   // Sort years in descending order
   const sortedYears = Object.keys(groupedByYear).sort((a, b) => b - a);
 
-  // Create CSV content
+  // Create CSV content using the new id field
   let csvContent = "年份,中文劇名,日文劇名,主演,劇集ID\n";
 
   sortedYears.forEach(year => {
@@ -477,7 +483,7 @@ async function exportHighlightedDoramasToCSV() {
         return field;
       };
 
-      csvContent += `${escapeCSVField(year)},${escapeCSVField(dorama.chineseTitle)},${escapeCSVField(dorama.japaneseTitle)},${escapeCSVField(actorsString)},${escapeCSVField(dorama.doramaInfoId)}\n`;
+      csvContent += `${escapeCSVField(year)},${escapeCSVField(dorama.chineseTitle)},${escapeCSVField(dorama.japaneseTitle)},${escapeCSVField(actorsString)},${escapeCSVField(dorama.id)}\n`;
     });
   });
 
@@ -492,7 +498,7 @@ async function exportHighlightedDoramasToCSV() {
   link.click();
   document.body.removeChild(link);
 
-        // Show success message
+  // Show success message
   const shareStatus = document.getElementById("share-status");
   if (shareStatus) {
     const message = `已成功匯出 ${highlightedDoramas.length} 部標記的日劇為 CSV`;
@@ -561,8 +567,9 @@ async function validateCSVContent(csvText) {
   await ensureCompleteDatasetIsLoaded();
   const fullDatasetDoramas = completeDoramaDataset;
 
+  // Create a lookup set using the new id field
+  const validIds = new Set(fullDatasetDoramas.map(d => String(d.id)));
 
-  const validDoramaIds = new Set(fullDatasetDoramas.map(d => String(d.doramaInfoId)));
   const importedIds = [];
   let validCount = 0;
   let invalidRows = [];
@@ -586,7 +593,7 @@ async function validateCSVContent(csvText) {
     }
 
     // Validate dorama ID exists in current dataset
-    if (!validDoramaIds.has(String(doramaId))) {
+    if (!validIds.has(String(doramaId))) {
       invalidRows.push(`第 ${lineIndex + 1} 行: 劇集ID "${doramaId}" 在當前資料集中不存在`);
       continue;
     }
@@ -611,7 +618,7 @@ async function validateCSVContent(csvText) {
 
   // Get actual dorama data for valid IDs
   const importedDoramas = fullDatasetDoramas.filter(dorama =>
-    importedIds.includes(String(dorama.doramaInfoId))
+    importedIds.includes(String(dorama.id))
   );
 
   return {
@@ -696,8 +703,8 @@ function importHighlightedDoramasFromCSV(file) {
           if (card) card.classList.add("highlighted");
         });
 
-        updateShareButtonState();
-        updateActiveFilterDisplay(); // Update highlight count display
+        await updateShareButtonState();
+        await updateActiveFilterDisplay(); // Update highlight count display
 
         const shareStatus = document.getElementById("share-status");
         if (shareStatus) {
@@ -744,12 +751,12 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
     // Get existing highlighted IDs
     const existingHighlightedIds = new Set(JSON.parse(localStorage.getItem("highlightedDoramaIds")) || []);
 
-    // Separate new and existing doramas
+    // Separate new and existing doramas using the new id field
     const newDoramas = importedDoramas.filter(dorama =>
-      !existingHighlightedIds.has(String(dorama.doramaInfoId))
+      !existingHighlightedIds.has(String(dorama.id))
     );
     const existingDoramas = importedDoramas.filter(dorama =>
-      existingHighlightedIds.has(String(dorama.doramaInfoId))
+      existingHighlightedIds.has(String(dorama.id))
     );
 
     // Create preview content
@@ -927,7 +934,7 @@ function generateActorChecklistImage(actorName, doramas, highlightedIds) {
       const index = row * columnsPerRow + col;
       if (index < actorDoramas.length) {
         const dorama = actorDoramas[index];
-        const isSeen = highlightedIds.has(String(dorama.doramaInfoId));
+        const isSeen = highlightedIds.has(String(dorama.id));
         const seenStyle = `background-color: #10b981; color: white; border: 1px solid #059669; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);`;
         const unseenStyle = `background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0;`;
         const cellStyle = `width: ${100 / columnsPerRow}%; padding: 10px 6px; font-size: 18px; font-weight: 600; border-radius: 5px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; ${isSeen ? seenStyle : unseenStyle}`;
@@ -974,7 +981,7 @@ function generateDataSourceChecklistImage(
       const index = row * gridColumns + col;
       if (index < doramas.length) {
         const dorama = doramas[index];
-        const isSeen = highlightedIds.has(String(dorama.doramaInfoId));
+        const isSeen = highlightedIds.has(String(dorama.id));
         const seenStyle = `background-color: #10b981; color: white; border: 1px solid #059669; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);`;
         const unseenStyle = `background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0;`;
         const cellStyle = `width: ${100 / gridColumns}%; padding: 8px 4px; font-size: 16px; font-weight: 600; border-radius: 5px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; ${isSeen ? seenStyle : unseenStyle}`;
@@ -1042,7 +1049,7 @@ function generateTop5PerYearChecklistImage(doramas, highlightedIds, title) {
 
       for (let i = startIndex; i < endIndex; i++) {
         const dorama = yearDoramas[i];
-        const isSeen = highlightedIds.has(String(dorama.doramaInfoId));
+        const isSeen = highlightedIds.has(String(dorama.id));
         const seenStyle = `background-color: #10b981; color: white; border: 1px solid #059669; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);`;
         const unseenStyle = `background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0;`;
         const cellStyle = `width: ${doramaColumnWidth}%; padding: 10px 8px; font-size: 17px; font-weight: 600; border-radius: 5px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; ${isSeen ? seenStyle : unseenStyle}`;
@@ -1121,9 +1128,8 @@ function displayDoramaGrid(doramas) {
     mainGridContainer.appendChild(yearContainer);
   });
 
-  const applyPersistedHighlights = () => {
-    const highlightedIds =
-      JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+  const applyPersistedHighlights = async () => {
+    const highlightedIds = await getHighlightedIds();
     highlightedIds.forEach((id) => {
       const cardToHighlight = document.querySelector(
         `.dorama-card[data-dorama-id='${id}']`,
@@ -1139,7 +1145,7 @@ function renderDoramasForYear(yearGrid, doramas, startIndex, endIndex) {
     const dorama = doramas[i];
     const card = document.createElement("div");
     card.className = "dorama-card";
-    card.dataset.doramaId = dorama.doramaInfoId;
+    card.dataset.doramaId = dorama.id;
     const actorsHtml = dorama.mainActor
       .map((actor) => `<li>${actor}</li>`)
       .join("");
@@ -1253,7 +1259,7 @@ function updateLoadAllButtonText(button, year, totalCount) {
   }
 }
 
-function loadMoreForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
+async function loadMoreForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
   const yearGrid = document.querySelector(
     `.grid-container[data-year="${year}"]`,
   );
@@ -1285,10 +1291,10 @@ function loadMoreForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
   updateLoadAllButtonText(loadAllButton, year, totalCount);
 
   // Reapply highlights to new cards
-  reapplyHighlights();
+  await reapplyHighlights();
 }
 
-function loadAllForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
+async function loadAllForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
   const yearGrid = document.querySelector(
     `.grid-container[data-year="${year}"]`,
   );
@@ -1319,12 +1325,11 @@ function loadAllForYear(year, yearDoramas, loadMoreButton, loadAllButton) {
   updateLoadAllButtonText(loadAllButton, year, totalCount);
 
   // Reapply highlights to new cards
-  reapplyHighlights();
+  await reapplyHighlights();
 }
 
-function reapplyHighlights() {
-  const highlightedIds =
-    JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+async function reapplyHighlights() {
+  const highlightedIds = await getHighlightedIds();
   highlightedIds.forEach((id) => {
     const cardToHighlight = document.querySelector(
       `.dorama-card[data-dorama-id='${id}']`,
@@ -1333,14 +1338,14 @@ function reapplyHighlights() {
   });
 }
 
-function updateActiveFilterDisplay() {
+async function updateActiveFilterDisplay() {
   const container = document.getElementById("active-filter-display");
   if (!container) return;
 
   let filtersHtml = "";
 
   // Add dataset and highlights info
-  const highlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds") || "[]");
+  const highlightedIds = await getHighlightedIds();
   const dataSourceNames = {
     "dorama_info.txtpb": "全部日劇",
     "top_100_dorama_info.txtpb": "Top 100 總榜",
@@ -1414,7 +1419,7 @@ function updateActiveFilterDisplay() {
   updateBodyTopPadding();
 }
 
-function updateShareButtonState() {
+async function updateShareButtonState() {
   const shareButton = document.getElementById("share-button");
   const exportCSVButton = document.getElementById("export-csv-btn");
   const importCSVLabel = document.getElementById("import-csv-label");
@@ -1422,9 +1427,7 @@ function updateShareButtonState() {
   if (!shareButton) return;
 
   const isSpecialDataSource = currentDataSourceFile !== "dorama_info.txtpb";
-  const highlightedIds = JSON.parse(
-    localStorage.getItem("highlightedDoramaIds") || "[]",
-  );
+  const highlightedIds = await getHighlightedIds();
   const hasHighlightedDoramas = highlightedIds.length > 0;
 
   // Update share button
@@ -1818,7 +1821,7 @@ function setupEventListeners() {
       event.target.value = '';
     });
   }
-  
+
     // Event listener for the parse file button
     const parseFileInput = document.getElementById("parse-file-input");
     if (parseFileInput) {
@@ -1856,7 +1859,7 @@ function setupEventListeners() {
       ) {
         // Generate image for highlighted doramas from main dataset
         const highlightedDoramas = allDoramas.filter((dorama) =>
-          highlightedIds.has(String(dorama.doramaInfoId)),
+          highlightedIds.has(String(dorama.id)),
         );
         downloadFilename = `my_watched_doramas_${highlightedDoramas.length}.png`;
         imageContainer = generateTop5PerYearChecklistImage(
@@ -1890,7 +1893,7 @@ function setupEventListeners() {
 
           // Calculate highlighted count for progress display
           const highlightedCount = allDoramas.filter((dorama) =>
-            highlightedIds.has(String(dorama.doramaInfoId)),
+            highlightedIds.has(String(dorama.id)),
           ).length;
           const totalCount = allDoramas.length;
           const titleWithProgress = `${config.title} (${highlightedCount}/${totalCount})`;
@@ -1967,6 +1970,7 @@ function setupEventListeners() {
           document.body.removeChild(imageContainer);
           updateShareButtonState();
         });
+
     });
   }
 
@@ -2012,6 +2016,7 @@ async function loadDoramaInfo(dataSourceFile) {
       throw new Error("無法從物件建立 Protobuf 訊息");
     }
     allDoramas = doramaInfoInstance.doramas || [];
+
     populateYearDropdowns();
     applyAllFilters();
     updateShareButtonState();
@@ -2067,3 +2072,55 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load the dorama data
   loadDoramaInfo(currentDataSourceFile);
 });
+
+// --- Highlight Data Migration Function ---
+async function migrateHighlightData() {
+  // Check if migration has already been completed
+  if (localStorage.getItem("highlightDataMigrated") === "true") {
+    return; // Already migrated
+  }
+
+  const highlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+
+  // If no highlights exist, just mark as migrated
+  if (highlightedIds.length === 0) {
+    localStorage.setItem("highlightDataMigrated", "true");
+    return;
+  }
+
+  // Ensure we have the complete dataset for migration
+  if (!completeDoramaDataset || completeDoramaDataset.length === 0) {
+    try {
+      await ensureCompleteDatasetIsLoaded();
+    } catch (error) {
+      console.error("Failed to load complete dataset for migration:", error);
+      return; // Cannot migrate without dataset
+    }
+  }
+
+  // Perform migration: convert dorama_info_id to id
+  const migratedIds = [];
+  const failedMigrations = [];
+
+  highlightedIds.forEach(oldId => {
+    const dorama = completeDoramaDataset.find(d =>
+      String(d.doramaInfoId) === String(oldId)
+    );
+
+    if (dorama) {
+      migratedIds.push(String(dorama.id));
+    } else {
+      failedMigrations.push(oldId);
+    }
+  });
+
+  // Update localStorage with migrated IDs and mark as migrated
+  localStorage.setItem("highlightedDoramaIds", JSON.stringify(migratedIds));
+  localStorage.setItem("highlightDataMigrated", "true");
+
+  // Log migration results
+  console.log(`Migrated ${migratedIds.length} highlight IDs from dorama_info_id to id`);
+  if (failedMigrations.length > 0) {
+    console.log(`Failed to migrate ${failedMigrations.length} IDs:`, failedMigrations);
+  }
+}
