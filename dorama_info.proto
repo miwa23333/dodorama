@@ -11,6 +11,7 @@ message Dorama {
   int32 dorama_info_id = 5;
   optional int32 comment = 6;
   optional int32 dorama_info_visit_cnt = 7;
+  uint32 id = 8;
 }
 
 message DoramaInfo { repeated Dorama doramas = 1; }
