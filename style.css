@@ -318,10 +318,10 @@ main {
 }
 
 .filter-controls button {
-  padding: 0.7rem 1.25rem;
+  padding: 0.7rem 1rem;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 0.9rem; /* Set base font size to 0.9rem */
   cursor: pointer;
   transition: background-color 0.2s ease;
   color: white;
@@ -350,8 +350,6 @@ main {
 
 .filter-controls button#clear-highlights-btn {
   background-color: #dc3545;
-  font-size: 0.9rem;
-  padding: 0.7rem 1rem;
 }
 
 .filter-controls button#clear-highlights-btn:hover {
@@ -360,8 +358,6 @@ main {
 
 .filter-controls button#share-button {
   background-color: #28a745;
-  font-size: 0.9rem;
-  padding: 0.7rem 1rem;
 }
 
 .filter-controls button#share-button:hover {
@@ -371,8 +367,6 @@ main {
 .filter-controls button#export-csv-btn {
   background-color: #17a2b8;
   color: white;
-  font-size: 0.9rem;
-  padding: 0.7rem 1rem;
 }
 
 .filter-controls button#export-csv-btn:hover {
@@ -735,6 +729,7 @@ input:checked + .slider:before {
     width: 100%;
   }
 
+  .filter-controls button,
   .filter-controls #import-csv-label,
   .filter-controls #parse-file-label {
     width: 100%;
