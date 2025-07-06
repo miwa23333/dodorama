@@ -1143,3 +1143,153 @@ body.modal-open {
 }
 
 /* END: New styles for the Fuzzy Match Review Modal */
+
+/* Manual Selection Dropdown Styles */
+.manual-selection-option {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.manual-selection-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.manual-selection-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.manual-selection-dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+.manual-selection-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.manual-selection-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.manual-selection-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+}
+
+.dropdown-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item.selected {
+  background-color: #f8fafc;
+}
+
+.dropdown-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.dropdown-item-title {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.dropdown-item-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.match-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+.match-badge.exact {
+  background-color: #10b981;
+  color: white;
+}
+
+.match-badge.high {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.match-badge.medium {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.match-badge.low {
+  background-color: #6b7280;
+  color: white;
+}
+
+.match-badge.very-low {
+  background-color: #9ca3af;
+  color: white;
+}
+
+.match-badge.none {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.match-type {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.3rem;
+  border-radius: 3px;
+  background-color: #e5e7eb;
+  color: #374151;
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.dropdown-more {
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
+  cursor: default;
+}
+
+.dropdown-more:hover {
+  background-color: #f8fafc;
+}

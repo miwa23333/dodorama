@@ -330,7 +330,7 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
         "正在進行模糊比對",
         `正在為 ${queries.length} 個項目進行比對，這可能需要一些時間，請稍候...`
       );
-      
+
       // Allow the UI to update and show the modal before the blocking code runs
       await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -385,6 +385,9 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
       const itemEl = document.createElement('div');
       itemEl.className = 'fuzzy-match-item';
 
+      // Store original matches for this item
+      itemEl.dataset.originalMatches = JSON.stringify(result.matches);
+
       let optionsHtml = '';
       const hasMatches = result.matches.length > 0;
 
@@ -406,7 +409,26 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
           optionsHtml = '<p class="no-match-found">找不到可能的比對結果。</p>';
           itemEl.classList.add('no-match-item');
       }
-      
+
+      // Manual selection option
+      const manualSelectionHtml = `
+          <label class="fuzzy-match-option manual-selection-option">
+              <input type="radio" name="match-group-${index}" value="manual">
+              <span class="manual-selection-container">
+                  <span class="manual-selection-label">手動選擇：</span>
+                  <div class="manual-selection-dropdown-container">
+                      <input type="text"
+                             class="manual-selection-input"
+                             placeholder="搜尋日劇名稱..."
+                             data-group="${index}"
+                             autocomplete="off">
+                      <div class="manual-selection-dropdown" data-group="${index}"></div>
+                      <input type="hidden" class="manual-selection-value" data-group="${index}">
+                  </div>
+              </span>
+          </label>
+      `;
+
       // The "ignore" option is now checked only if there are no other matches.
       const isIgnoreChecked = !hasMatches;
       const ignoreOptionHtml = `
@@ -422,6 +444,7 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
           </div>
           <div class="fuzzy-match-options-container">
               ${optionsHtml}
+              ${manualSelectionHtml}
               ${ignoreOptionHtml}
           </div>
       `;
@@ -438,7 +461,239 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
           e.target.closest('.fuzzy-match-option').classList.add('selected');
       });
   });
-  
+
+    // Setup manual selection functionality
+  body.querySelectorAll('.manual-selection-input').forEach(input => {
+      const groupIndex = input.dataset.group;
+      const dropdown = body.querySelector(`.manual-selection-dropdown[data-group="${groupIndex}"]`);
+      const hiddenInput = body.querySelector(`.manual-selection-value[data-group="${groupIndex}"]`);
+      const radioButton = body.querySelector(`input[name="match-group-${groupIndex}"][value="manual"]`);
+
+            // Get original fuzzy match scores for this group and calculate scores for ALL doramas
+      const fuzzyMatchItem = body.querySelector(`.fuzzy-match-item:nth-child(${parseInt(groupIndex) + 1})`);
+      const originalQuery = results[parseInt(groupIndex)].original; // Get the original parsed text
+
+                        let allDoramasForSelection = [...completeDoramaDataset];
+
+            // Get original fuzzy match scores - only for the top matches that were already calculated
+      const originalMatches = JSON.parse(fuzzyMatchItem.dataset.originalMatches || '[]');
+
+      // Create a lookup map only for the original top matches
+      const originalScoreMap = new Map();
+      originalMatches.forEach(match => {
+          originalScoreMap.set(String(match.dorama.id), match.score);
+      });
+      let filteredDoramas = allDoramasForSelection;
+      let selectedIndex = -1;
+
+                        const renderDropdown = () => {
+          dropdown.innerHTML = '';
+          dropdown.style.display = filteredDoramas.length > 0 ? 'block' : 'none';
+
+          const currentQuery = input.value.trim();
+
+          filteredDoramas.slice(0, 10).forEach((dorama, index) => {
+              const item = document.createElement('div');
+              item.className = `dropdown-item ${index === selectedIndex ? 'selected' : ''}`;
+
+              let matchBadge = '';
+              let displayScore;
+
+                                          if (currentQuery) {
+                  // When searching, show matched actor name if applicable
+                  const actors = dorama.mainActor || [];
+                  let matchedActors = [];
+
+                  // Find which actors matched the search query
+                  const normalizedQuery = currentQuery.toLowerCase();
+                  actors.forEach(actor => {
+                      const normalizedActor = actor.toLowerCase();
+                      if (normalizedActor.includes(normalizedQuery)) {
+                          matchedActors.push(actor);
+                      }
+                  });
+
+                  // Show the matched actor name(s)
+                  if (matchedActors.length > 0) {
+                      const actorNames = matchedActors.slice(0, 2).join(', '); // Show max 2 actors
+                      const moreActors = matchedActors.length > 2 ? ` +${matchedActors.length - 2}` : '';
+                      matchBadge = `<span class="match-type">${actorNames}${moreActors}</span>`;
+                  }
+                            } else {
+                  // When empty, show original fuzzy match score (only for top matches)
+                  displayScore = originalScoreMap.get(String(dorama.id));
+
+                  if (displayScore !== undefined) {
+                      if (displayScore >= 0.95) {
+                          matchBadge = '<span class="match-badge exact">完全符合</span>';
+                      } else if (displayScore >= 0.8) {
+                          matchBadge = `<span class="match-badge high">${Math.round(displayScore * 100)}%</span>`;
+                      } else if (displayScore >= 0.6) {
+                          matchBadge = `<span class="match-badge medium">${Math.round(displayScore * 100)}%</span>`;
+                      } else {
+                          matchBadge = `<span class="match-badge low">${Math.round(displayScore * 100)}%</span>`;
+                      }
+                  }
+                  // No badge for doramas that weren't in the original top matches
+              }
+
+              item.innerHTML = `
+                  <div class="dropdown-item-header">
+                      <div class="dropdown-item-title">${dorama.chineseTitle}</div>
+                      ${matchBadge}
+                  </div>
+                  <div class="dropdown-item-subtitle">${dorama.japaneseTitle} (${dorama.releaseYear})</div>
+              `;
+              item.addEventListener('click', () => selectDorama(dorama));
+              dropdown.appendChild(item);
+          });
+
+          if (filteredDoramas.length > 10) {
+              const moreItem = document.createElement('div');
+              moreItem.className = 'dropdown-item dropdown-more';
+              moreItem.textContent = `...還有 ${filteredDoramas.length - 10} 個結果`;
+              dropdown.appendChild(moreItem);
+          }
+      };
+
+      const selectDorama = (dorama) => {
+          input.value = `${dorama.chineseTitle} (${dorama.releaseYear})`;
+          hiddenInput.value = dorama.id;
+          dropdown.style.display = 'none';
+          radioButton.checked = true;
+          radioButton.dispatchEvent(new Event('change'));
+      };
+
+                  const filterDoramas = (query) => {
+          if (!query.trim()) {
+              // When empty, show all doramas ordered by original fuzzy match score
+              filteredDoramas = [...allDoramasForSelection].sort((a, b) => {
+                  const scoreA = originalScoreMap.get(String(a.id)) ?? 0;
+                  const scoreB = originalScoreMap.get(String(b.id)) ?? 0;
+
+                  if (Math.abs(scoreA - scoreB) < 0.01) {
+                      // If original scores are very close, prefer newer doramas
+                      return b.releaseYear - a.releaseYear;
+                  }
+                  return scoreB - scoreA; // Higher original score first
+              });
+              selectedIndex = -1;
+              renderDropdown();
+              return;
+          }
+
+          const normalizedQuery = query.toLowerCase();
+          const searchMatches = [];
+
+          // Use fuzzy matching for search field
+          allDoramasForSelection.forEach(dorama => {
+              const titles = [dorama.chineseTitle, dorama.japaneseTitle].filter(Boolean);
+              const actors = dorama.mainActor || [];
+              let bestScore = 0;
+              let matchType = '';
+
+              // Check titles with fuzzy matching
+              titles.forEach(title => {
+                  const normalizedTitle = title.toLowerCase();
+
+                  // Perfect substring match gets highest priority
+                  if (normalizedTitle.includes(normalizedQuery)) {
+                      bestScore = Math.max(bestScore, 1.0);
+                      matchType = 'exact';
+                  } else {
+                      // Fuzzy match
+                      const distance = levenshteinDistance(normalizedQuery, normalizedTitle);
+                      const score = 1 - (distance / Math.max(normalizedQuery.length, normalizedTitle.length));
+                      if (score > bestScore) {
+                          bestScore = score;
+                          matchType = 'fuzzy';
+                      }
+                  }
+              });
+
+              // Check actors (exact match only for actors to avoid too many results)
+              actors.forEach(actor => {
+                  const normalizedActor = actor.toLowerCase();
+                  if (normalizedActor.includes(normalizedQuery)) {
+                      bestScore = Math.max(bestScore, 0.9); // Slightly lower than exact title match
+                      matchType = 'actor';
+                  }
+              });
+
+              // Include matches with score > 0.2 (lower threshold for search)
+              if (bestScore > 0.2) {
+                  searchMatches.push({ dorama, score: bestScore, matchType });
+              }
+          });
+
+          // Sort by search query fuzzy match score (highest first), then by release year (newest first)
+          filteredDoramas = searchMatches
+              .sort((a, b) => {
+                  if (Math.abs(a.score - b.score) < 0.01) {
+                      // If search scores are very close, prefer newer doramas
+                      return b.dorama.releaseYear - a.dorama.releaseYear;
+                  }
+                  return b.score - a.score; // Higher search score first
+              })
+              .map(match => match.dorama);
+
+          selectedIndex = -1;
+          renderDropdown();
+      };
+
+      // Input event handlers
+      input.addEventListener('input', (e) => {
+          filterDoramas(e.target.value);
+      });
+
+      input.addEventListener('focus', () => {
+          filterDoramas(input.value);
+      });
+
+      input.addEventListener('blur', (e) => {
+          // Delay hiding to allow clicks on dropdown items
+          setTimeout(() => {
+              if (!dropdown.contains(document.activeElement)) {
+                  dropdown.style.display = 'none';
+              }
+          }, 150);
+      });
+
+      input.addEventListener('keydown', (e) => {
+          if (dropdown.style.display === 'none') return;
+
+          switch (e.key) {
+              case 'ArrowDown':
+                  e.preventDefault();
+                  selectedIndex = Math.min(selectedIndex + 1, Math.min(filteredDoramas.length, 10) - 1);
+                  renderDropdown();
+                  break;
+              case 'ArrowUp':
+                  e.preventDefault();
+                  selectedIndex = Math.max(selectedIndex - 1, -1);
+                  renderDropdown();
+                  break;
+              case 'Enter':
+                  e.preventDefault();
+                  if (selectedIndex >= 0 && selectedIndex < filteredDoramas.length) {
+                      selectDorama(filteredDoramas[selectedIndex]);
+                  }
+                  break;
+              case 'Escape':
+                  dropdown.style.display = 'none';
+                  break;
+          }
+      });
+
+      // Auto-select radio when typing
+      input.addEventListener('input', () => {
+          if (input.value.trim()) {
+              radioButton.checked = true;
+              radioButton.dispatchEvent(new Event('change'));
+          }
+      });
+  });
+
   // Logic for the new toggle switch
   const handleToggleVisibility = () => {
       const noMatchItems = body.querySelectorAll('.no-match-item');
@@ -469,7 +724,15 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
       results.forEach((_, index) => {
           const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
           if (selectedRadio && selectedRadio.value !== 'reject') {
-              selectedIds.add(selectedRadio.value);
+              if (selectedRadio.value === 'manual') {
+                  // Get the actual dorama ID from the hidden input
+                  const hiddenInput = document.querySelector(`.manual-selection-value[data-group="${index}"]`);
+                  if (hiddenInput && hiddenInput.value) {
+                      selectedIds.add(hiddenInput.value);
+                  }
+              } else {
+                  selectedIds.add(selectedRadio.value);
+              }
           }
       });
 
