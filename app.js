@@ -318,108 +318,132 @@ async function handleFileParse(file) {
     reader.readAsText(file);
 }
 
-
 /**
  * Displays a modal for the user to review and confirm fuzzy matches.
  * @param {Array} results The matching results to display.
  */
-function showFuzzyMatchReviewModal(results) {
-    const modal = document.getElementById('fuzzy-match-modal');
-    const body = document.getElementById('fuzzy-match-body');
-    const buttonsContainer = document.getElementById('fuzzy-match-buttons');
-    const closeBtn = document.getElementById('fuzzy-match-close-btn');
+ function showFuzzyMatchReviewModal(results) {
+  const modal = document.getElementById('fuzzy-match-modal');
+  const body = document.getElementById('fuzzy-match-body');
+  const buttonsContainer = document.getElementById('fuzzy-match-buttons');
+  const closeBtn = document.getElementById('fuzzy-match-close-btn');
+  const hideToggle = document.getElementById('hide-no-match-toggle');
 
-    body.innerHTML = ''; // Clear previous content
+  body.innerHTML = ''; // Clear previous content
 
-    results.forEach((result, index) => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'fuzzy-match-item';
+  results.forEach((result, index) => {
+      const itemEl = document.createElement('div');
+      itemEl.className = 'fuzzy-match-item';
 
-        let optionsHtml = '';
-        if (result.matches.length > 0) {
-            result.matches.forEach(match => {
-                optionsHtml += `
-                    <label class="fuzzy-match-option">
-                        <input type="radio" name="match-group-${index}" value="${match.dorama.id}">
-                        <span class="match-details">
-                            <span class="title">${match.dorama.chineseTitle} (${match.dorama.japaneseTitle})</span>
-                            <span class="year">${match.dorama.releaseYear}</span>
-                            <span class="score">(相似度: ${Math.round(match.score * 100)}%)</span>
-                        </span>
-                    </label>
-                `;
-            });
-        } else {
-            optionsHtml = '<p class="no-match-found">找不到可能的比對結果。</p>';
-        }
+      let optionsHtml = '';
+      const hasMatches = result.matches.length > 0;
 
-        itemEl.innerHTML = `
-            <div class="fuzzy-match-original-text">
-                解析文字: <span>"${result.original}"</span>
-            </div>
-            <div class="fuzzy-match-options-container">
-                ${optionsHtml}
-                <label class="fuzzy-match-option">
-                    <input type="radio" name="match-group-${index}" value="reject" checked>
-                    <span>忽略此項目</span>
-                </label>
-            </div>
-        `;
-        body.appendChild(itemEl);
-    });
+      if (hasMatches) {
+          result.matches.forEach((match, matchIndex) => {
+              const isChecked = matchIndex === 0; // The first match has the highest score
+              optionsHtml += `
+                  <label class="fuzzy-match-option ${isChecked ? 'selected' : ''}">
+                      <input type="radio" name="match-group-${index}" value="${match.dorama.id}" ${isChecked ? 'checked' : ''}>
+                      <span class="match-details">
+                          <span class="title">${match.dorama.chineseTitle} (${match.dorama.japaneseTitle})</span>
+                          <span class="year">${match.dorama.releaseYear}</span>
+                          <span class="score">(相似度: ${Math.round(match.score * 100)}%)</span>
+                      </span>
+                  </label>
+              `;
+          });
+      } else {
+          optionsHtml = '<p class="no-match-found">找不到可能的比對結果。</p>';
+          itemEl.classList.add('no-match-item');
+      }
+      
+      // The "ignore" option is now checked only if there are no other matches.
+      const isIgnoreChecked = !hasMatches;
+      const ignoreOptionHtml = `
+          <label class="fuzzy-match-option ${isIgnoreChecked ? 'selected' : ''}">
+              <input type="radio" name="match-group-${index}" value="reject" ${isIgnoreChecked ? 'checked' : ''}>
+              <span>忽略此項目</span>
+          </label>
+      `;
 
-    // Add listeners to visually indicate selection
-    body.querySelectorAll('.fuzzy-match-option input').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            const groupName = e.target.name;
-            document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
-                r.closest('.fuzzy-match-option').classList.remove('selected');
-            });
-            e.target.closest('.fuzzy-match-option').classList.add('selected');
-        });
-    });
+      itemEl.innerHTML = `
+          <div class="fuzzy-match-original-text">
+              解析文字: <span>"${result.original}"</span>
+          </div>
+          <div class="fuzzy-match-options-container">
+              ${optionsHtml}
+              ${ignoreOptionHtml}
+          </div>
+      `;
+      body.appendChild(itemEl);
+  });
 
-    // Setup modal buttons
-    buttonsContainer.innerHTML = `
-        <button id="confirm-matches-btn" class="dialog-btn dialog-btn-primary">確認並合併標記</button>
-        <button id="cancel-matches-btn" class="dialog-btn dialog-btn-light">取消</button>
-    `;
+  // Add listeners to visually indicate selection
+  body.querySelectorAll('.fuzzy-match-option input').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+          const groupName = e.target.name;
+          document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+              r.closest('.fuzzy-match-option').classList.remove('selected');
+          });
+          e.target.closest('.fuzzy-match-option').classList.add('selected');
+      });
+  });
+  
+  // Logic for the new toggle switch
+  const handleToggleVisibility = () => {
+      const noMatchItems = body.querySelectorAll('.no-match-item');
+      if (hideToggle.checked) {
+          noMatchItems.forEach(item => item.style.display = 'none');
+      } else {
+          noMatchItems.forEach(item => item.style.display = 'block');
+      }
+  };
 
-    const closeDialog = () => {
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-    };
+  hideToggle.addEventListener('change', handleToggleVisibility);
+  handleToggleVisibility(); // Set initial state
 
-    document.getElementById('confirm-matches-btn').onclick = () => {
-        const selectedIds = new Set();
-        results.forEach((_, index) => {
-            const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
-            if (selectedRadio && selectedRadio.value !== 'reject') {
-                selectedIds.add(selectedRadio.value);
-            }
-        });
 
-        if (selectedIds.size > 0) {
-            const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
-            const mergedIds = [...new Set([...existingHighlightedIds, ...Array.from(selectedIds)])];
-            localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
+  // Setup modal buttons
+  buttonsContainer.innerHTML = `
+      <button id="confirm-matches-btn" class="dialog-btn dialog-btn-primary">確認並合併標記</button>
+      <button id="cancel-matches-btn" class="dialog-btn dialog-btn-light">取消</button>
+  `;
 
-            // Re-apply all highlights
-            applyAllFilters();
+  const closeDialog = () => {
+      modal.style.display = 'none';
+      document.body.classList.remove('modal-open');
+  };
 
-            const shareStatus = document.getElementById("share-status");
-            shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
-            setTimeout(() => { shareStatus.textContent = ""; }, 4000);
-        }
+  document.getElementById('confirm-matches-btn').onclick = () => {
+      const selectedIds = new Set();
+      results.forEach((_, index) => {
+          const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
+          if (selectedRadio && selectedRadio.value !== 'reject') {
+              selectedIds.add(selectedRadio.value);
+          }
+      });
 
-        closeDialog();
-    };
+      if (selectedIds.size > 0) {
+          const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+          const mergedIds = [...new Set([...existingHighlightedIds, ...Array.from(selectedIds)])];
+          localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
 
-    document.getElementById('cancel-matches-btn').onclick = closeDialog;
-    closeBtn.onclick = closeDialog;
+          // Re-apply all highlights
+          applyAllFilters();
 
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
+          const shareStatus = document.getElementById("share-status");
+          shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
+          setTimeout(() => { shareStatus.textContent = ""; }, 4000);
+      }
+
+      closeDialog();
+  };
+
+  document.getElementById('cancel-matches-btn').onclick = closeDialog;
+  closeBtn.onclick = closeDialog;
+
+  modal.style.display = 'flex';
+  document.body.classList.add('modal-open');
 }
 
 
@@ -1612,7 +1636,7 @@ function setupResponsiveHeader() {
           filterToggleBtn.setAttribute("aria-expanded", "false");
       }
       if (header.classList.contains("filters-open")) {
-        header.classList.remove("filter-menu-open");
+        header.classList.remove("filters-open");
         if (menuToggleBtn)
           menuToggleBtn.setAttribute("aria-expanded", "false");
       }

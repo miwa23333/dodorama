@@ -1016,6 +1016,25 @@ body.modal-open {
 }
 
 /* START: New styles for the Fuzzy Match Review Modal */
+.fuzzy-match-review-modal .dialog-header {
+    align-items: center;
+}
+
+.fuzzy-match-review-modal .dialog-header h3 {
+    margin-right: auto; /* Pushes toggle and close button to the right */
+}
+
+.toggle-switch-container.modal-toggle {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.modal-toggle .toggle-label {
+    color: #555;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 .fuzzy-match-review-modal {
   max-width: 800px;
   width: 90%;
@@ -1103,4 +1122,24 @@ body.modal-open {
   color: #dc3545;
   font-style: italic;
 }
+.fuzzy-match-review-modal .dialog-header {
+  flex-wrap: wrap; /* Allows items to wrap onto a new line */
+  row-gap: 0.75rem; /* Adds vertical space when items wrap */
+}
+
+.fuzzy-match-review-modal .dialog-header h3 {
+  flex-basis: 100%; /* Makes the title take the full first line */
+  margin-right: 0;   /* Resets the desktop margin */
+}
+
+.toggle-switch-container.modal-toggle {
+  order: 1;          /* Ensures toggle comes first on the second line */
+  margin-left: 0;
+  margin-right: auto; /* Pushes the close button to the far right */
+}
+
+.fuzzy-match-review-modal .dialog-header .modal-close {
+  order: 2; /* Ensures close button comes after the toggle */
+}
+
 /* END: New styles for the Fuzzy Match Review Modal */
