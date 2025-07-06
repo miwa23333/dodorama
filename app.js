@@ -266,56 +266,106 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
 }
 
 /**
- * Handles the file parsing process. Now ensures the complete dataset is loaded
- * before performing a fuzzy match against it.
+ * Handles the file parsing process, providing UI feedback during matching.
  * @param {File} file The file uploaded by the user.
  */
-async function handleFileParse(file) {
-    const reader = new FileReader();
+ async function handleFileParse(file) {
+  const reader = new FileReader();
+  const parseFileInput = document.getElementById("parse-file-input");
+  const parseFileLabel = document.getElementById("parse-file-label");
+  const statusDiv = document.getElementById("share-status");
+  const originalLabelText = parseFileLabel.textContent;
 
-    reader.onload = async (e) => {
-        try {
-            // START: Ensure complete dataset is loaded before proceeding
-            await ensureCompleteDatasetIsLoaded();
-            // END
+  // --- Start: Modal Loading Indicator Logic ---
+  const loadingModal = document.getElementById("custom-dialog-modal");
+  const loadingTitle = document.getElementById("dialog-title");
+  const loadingMessage = document.getElementById("dialog-message");
+  const loadingButtons = document.getElementById("dialog-buttons");
+  const loadingCloseBtn = document.getElementById("dialog-close-btn");
 
-            const content = e.target.result;
-            let queries = [];
+  // Helper to show a modal as a loading indicator
+  const showLoading = (title, message) => {
+    loadingTitle.textContent = title;
+    loadingMessage.textContent = message;
+    loadingButtons.innerHTML = ''; // No buttons needed for loading
+    loadingCloseBtn.style.display = 'none'; // Hide close button
+    loadingModal.style.display = 'flex';
+    document.body.classList.add("modal-open");
+  };
 
-            if (content.includes(',')) {
-                const lines = content.split('\n');
-                const allFields = lines.flatMap(line => parseCSVLine(line));
-                queries = allFields.map(field => field.trim()).filter(Boolean);
-            } else {
-                queries = content.split('\n').map(line => line.trim()).filter(Boolean);
-            }
+  // Helper to hide the loading modal
+  const hideLoading = () => {
+    loadingModal.style.display = 'none';
+    loadingCloseBtn.style.display = 'block'; // Restore for normal dialogs
+    document.body.classList.remove("modal-open");
+  };
+  // --- End: Modal Loading Indicator Logic ---
 
-            if (queries.length === 0) {
-                await showAlert("檔案錯誤", "檔案為空或無法解析出有效內容。");
-                return;
-            }
+  reader.onload = async (e) => {
+    parseFileInput.disabled = true;
+    parseFileLabel.textContent = '正在處理中...';
 
-            const results = queries.map(query => ({
-                original: query,
-                // START: Pass the complete dataset to the matching function
-                matches: findFuzzyMatches(query, completeDoramaDataset)
-                // END
-            }));
+    try {
+      // This function shows its own non-modal status updates
+      await ensureCompleteDatasetIsLoaded();
 
-            showFuzzyMatchReviewModal(results);
+      const content = e.target.result;
+      let queries = [];
 
-        } catch (error) {
-            // Error handling is managed within ensureCompleteDatasetIsLoaded
-            // so we just need to stop the process here.
-            console.log("停止解析，因為無法載入完整資料庫。");
-        }
-    };
+      if (content.includes(',')) {
+        const lines = content.split('\n');
+        const allFields = lines.flatMap(line => parseCSVLine(line));
+        queries = allFields.map(field => field.trim()).filter(Boolean);
+      } else {
+        queries = content.split('\n').map(line => line.trim()).filter(Boolean);
+      }
 
-    reader.onerror = async () => {
-        await showAlert("讀取錯誤", "讀取檔案時發生錯誤。");
-    };
+      if (queries.length === 0) {
+        await showAlert("檔案錯誤", "檔案為空或無法解析出有效內容。");
+        return; // Exits the 'try' block, 'finally' will still run
+      }
 
-    reader.readAsText(file);
+      // Show a blocking modal right before the CPU-intensive operation
+      showLoading(
+        "正在進行模糊比對",
+        `正在為 ${queries.length} 個項目進行比對，這可能需要一些時間，請稍候...`
+      );
+      
+      // Allow the UI to update and show the modal before the blocking code runs
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      const results = queries.map(query => ({
+        original: query,
+        matches: findFuzzyMatches(query, completeDoramaDataset)
+      }));
+
+      // Hide the loading modal and immediately show the results
+      hideLoading();
+      showFuzzyMatchReviewModal(results);
+
+      statusDiv.textContent = '比對完成！';
+      setTimeout(() => { statusDiv.textContent = ''; }, 4000);
+
+    } catch (error) {
+      // Error from ensureCompleteDatasetIsLoaded is already handled there with an alert.
+      // This will catch any other errors during the process.
+      console.log("停止解析，因為處理過程中發生錯誤。", error);
+    } finally {
+      // ALWAYS hide the loading modal and reset the button state
+      hideLoading();
+      parseFileInput.disabled = false;
+      parseFileLabel.textContent = originalLabelText;
+    }
+  };
+
+  reader.onerror = async () => {
+    await showAlert("讀取錯誤", "讀取檔案時發生錯誤。");
+    parseFileInput.disabled = false;
+    parseFileLabel.textContent = originalLabelText;
+    statusDiv.textContent = '';
+  };
+
+  reader.readAsText(file);
 }
 
 /**
