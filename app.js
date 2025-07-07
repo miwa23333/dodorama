@@ -713,6 +713,34 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
   };
 
   document.getElementById('confirm-matches-btn').onclick = () => {
+
+    document.querySelectorAll('.manual-selection-input').forEach(input => {
+        input.style.borderColor = '#e2e8f0'; // Reset to default border color
+    });
+    
+      for (let index = 0; index < results.length; index++) {
+          const manualRadio = document.querySelector(`input[name="match-group-${index}"][value="manual"]:checked`);
+    
+          // Check if "Manual Selection" is the chosen option for this item
+          if (manualRadio) {
+              const hiddenValueInput = document.querySelector(`.manual-selection-value[data-group="${index}"]`);
+              
+              // If no value is present in the hidden input, it means a dorama was not selected
+              if (!hiddenValueInput || !hiddenValueInput.value) {
+                  const originalText = results[index].original;
+                  const textInput = document.querySelector(`.manual-selection-input[data-group="${index}"]`);
+    
+                  // Highlight the empty input field
+                  if (textInput) {
+                      textInput.style.borderColor = '#dc3545'; // Highlight with a red border
+                      textInput.focus();
+                  }
+                  
+                  return; // Stop the function from proceeding
+              }
+          }
+      }
+
       const selectedIds = new Set();
       results.forEach((_, index) => {
           const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
