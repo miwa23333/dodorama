@@ -547,13 +547,6 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
               item.addEventListener('click', () => selectDorama(dorama));
               dropdown.appendChild(item);
           });
-
-          if (filteredDoramas.length > 10) {
-              const moreItem = document.createElement('div');
-              moreItem.className = 'dropdown-item dropdown-more';
-              moreItem.textContent = `...還有 ${filteredDoramas.length - 10} 個結果`;
-              dropdown.appendChild(moreItem);
-          }
       };
 
       const selectDorama = (dorama) => {
