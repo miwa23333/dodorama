@@ -708,76 +708,115 @@ function findFuzzyMatches(query, dataset) { // START: Updated signature
   `;
 
   const closeDialog = () => {
-      modal.style.display = 'none';
-      document.body.classList.remove('modal-open');
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
   };
 
-  document.getElementById('confirm-matches-btn').onclick = () => {
-
-    document.querySelectorAll('.manual-selection-input').forEach(input => {
-        input.style.borderColor = '#e2e8f0'; // Reset to default border color
+  document.getElementById("confirm-matches-btn").onclick = async () => {
+    // Make it async
+    document.querySelectorAll(".manual-selection-input").forEach((input) => {
+      input.style.borderColor = "#e2e8f0"; // Reset to default border color
     });
-    
-      for (let index = 0; index < results.length; index++) {
-          const manualRadio = document.querySelector(`input[name="match-group-${index}"][value="manual"]:checked`);
-    
-          // Check if "Manual Selection" is the chosen option for this item
-          if (manualRadio) {
-              const hiddenValueInput = document.querySelector(`.manual-selection-value[data-group="${index}"]`);
-              
-              // If no value is present in the hidden input, it means a dorama was not selected
-              if (!hiddenValueInput || !hiddenValueInput.value) {
-                  const originalText = results[index].original;
-                  const textInput = document.querySelector(`.manual-selection-input[data-group="${index}"]`);
-    
-                  // Highlight the empty input field
-                  if (textInput) {
-                      textInput.style.borderColor = '#dc3545'; // Highlight with a red border
-                      textInput.focus();
-                  }
-                  
-                  return; // Stop the function from proceeding
-              }
+
+    for (let index = 0; index < results.length; index++) {
+      const manualRadio = document.querySelector(
+        `input[name="match-group-${index}"][value="manual"]:checked`,
+      );
+
+      // Check if "Manual Selection" is the chosen option for this item
+      if (manualRadio) {
+        const hiddenValueInput = document.querySelector(
+          `.manual-selection-value[data-group="${index}"]`,
+        );
+
+        // If no value is present in the hidden input, it means a dorama was not selected
+        if (!hiddenValueInput || !hiddenValueInput.value) {
+          const textInput = document.querySelector(
+            `.manual-selection-input[data-group="${index}"]`,
+          );
+
+          // Highlight the empty input field
+          if (textInput) {
+            textInput.style.borderColor = "#dc3545"; // Highlight with a red border
+            textInput.focus();
           }
-      }
 
-      const selectedIds = new Set();
-      results.forEach((_, index) => {
-          const selectedRadio = document.querySelector(`input[name="match-group-${index}"]:checked`);
-          if (selectedRadio && selectedRadio.value !== 'reject') {
-              if (selectedRadio.value === 'manual') {
-                  // Get the actual dorama ID from the hidden input
-                  const hiddenInput = document.querySelector(`.manual-selection-value[data-group="${index}"]`);
-                  if (hiddenInput && hiddenInput.value) {
-                      selectedIds.add(hiddenInput.value);
-                  }
-              } else {
-                  selectedIds.add(selectedRadio.value);
-              }
+          // Use the custom showAlert function
+          await showAlert(
+            "選擇不完整",
+            `請為標記為 "手動選擇" 的項目「${results[index].original}」選擇一部日劇。`,
+          );
+          return; // Stop the function from proceeding
+        }
+      }
+    }
+
+    const selectedIds = new Set();
+    results.forEach((_, index) => {
+      const selectedRadio = document.querySelector(
+        `input[name="match-group-${index}"]:checked`,
+      );
+      if (selectedRadio && selectedRadio.value !== "reject") {
+        if (selectedRadio.value === "manual") {
+          // Get the actual dorama ID from the hidden input
+          const hiddenInput = document.querySelector(
+            `.manual-selection-value[data-group="${index}"]`,
+          );
+          if (hiddenInput && hiddenInput.value) {
+            selectedIds.add(hiddenInput.value);
           }
-      });
-
-      if (selectedIds.size > 0) {
-          const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
-          const mergedIds = [...new Set([...existingHighlightedIds, ...Array.from(selectedIds)])];
-          localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
-
-          // Re-apply all highlights
-          applyAllFilters();
-
-          const shareStatus = document.getElementById("share-status");
-          shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
-          setTimeout(() => { shareStatus.textContent = ""; }, 4000);
+        } else {
+          selectedIds.add(selectedRadio.value);
+        }
       }
+    });
 
+    if (selectedIds.size > 0) {
+      // Get the full dorama objects for the selected IDs
+      const selectedDoramas = completeDoramaDataset.filter((dorama) =>
+        selectedIds.has(String(dorama.id)),
+      );
+
+      // Show the preview dialog using the reused function
+      const shouldProceed = await showImportPreviewDialog(
+        selectedDoramas,
+        0, // invalidCount
+        [], // invalidRows
+        "標記預覽", // Custom title
+      );
+
+      // If the user confirms the preview, proceed with merging
+      if (shouldProceed) {
+        const existingHighlightedIds =
+          JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+        const mergedIds = [
+          ...new Set([...existingHighlightedIds, ...Array.from(selectedIds)]),
+        ];
+        localStorage.setItem("highlightedDoramaIds", JSON.stringify(mergedIds));
+
+        // Re-apply all highlights to the main view
+        applyAllFilters();
+
+        const shareStatus = document.getElementById("share-status");
+        shareStatus.textContent = `已成功合併標記 ${selectedIds.size} 部日劇。`;
+        setTimeout(() => {
+          shareStatus.textContent = "";
+        }, 4000);
+
+        closeDialog(); // Close the fuzzy match review modal
+      }
+      // If user cancels, do nothing and stay on the review modal.
+    } else {
+      // If nothing was selected, just close the dialog.
       closeDialog();
+    }
   };
 
-  document.getElementById('cancel-matches-btn').onclick = closeDialog;
+  document.getElementById("cancel-matches-btn").onclick = closeDialog;
   closeBtn.onclick = closeDialog;
 
-  modal.style.display = 'flex';
-  document.body.classList.add('modal-open');
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
 }
 
 
@@ -989,10 +1028,10 @@ async function validateCSVContent(csvText) {
   };
 }
 
-function importHighlightedDoramasFromCSV(file) {
+async function importHighlightedDoramasFromCSV(file) {
   const reader = new FileReader();
 
-  reader.onload = async function(e) {
+  reader.onload = async function (e) {
     try {
       const csvText = e.target.result;
       const validation = await validateCSVContent(csvText);
@@ -1007,7 +1046,7 @@ function importHighlightedDoramasFromCSV(file) {
         const shouldProceed = await showImportPreviewDialog(
           validation.importedDoramas,
           validation.invalidCount,
-          validation.invalidRows
+          validation.invalidRows,
         );
 
         if (!shouldProceed) {
@@ -1015,17 +1054,21 @@ function importHighlightedDoramasFromCSV(file) {
         }
       } else {
         // No valid doramas to import
-        await showAlert("CSV 檔案無有效資料",
+        await showAlert(
+          "CSV 檔案無有效資料",
           "CSV 檔案中沒有可匯入的有效日劇資料。\n\n" +
-          validation.invalidRows.slice(0, 5).join('\n') +
-          (validation.invalidRows.length > 5 ? `\n...還有 ${validation.invalidRows.length - 5} 個錯誤` : "")
+            validation.invalidRows.slice(0, 5).join("\n") +
+            (validation.invalidRows.length > 5
+              ? `\n...還有 ${validation.invalidRows.length - 5} 個錯誤`
+              : ""),
         );
         return;
       }
 
       // Import valid doramas
       if (validation.validCount > 0) {
-        const existingHighlightedIds = JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
+        const existingHighlightedIds =
+          JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [];
         const hasExistingHighlights = existingHighlightedIds.length > 0;
 
         let finalHighlightedIds;
@@ -1033,7 +1076,10 @@ function importHighlightedDoramasFromCSV(file) {
 
         if (hasExistingHighlights) {
           // Show choice dialog using custom modal
-          const choice = await showImportChoiceDialog(existingHighlightedIds.length, validation.importedDoramas.length);
+          const choice = await showImportChoiceDialog(
+            existingHighlightedIds.length,
+            validation.importedDoramas.length,
+          );
           if (choice === null) {
             return; // User cancelled
           }
@@ -1042,22 +1088,31 @@ function importHighlightedDoramasFromCSV(file) {
 
         if (importMode === "merge") {
           // Merge: combine existing and new highlights, avoiding duplicates
-          const mergedIds = [...new Set([...existingHighlightedIds, ...validation.importedIds])];
+          const mergedIds = [
+            ...new Set([...existingHighlightedIds, ...validation.importedIds]),
+          ];
           finalHighlightedIds = mergedIds;
         } else {
           // Overwrite: replace all existing highlights with new ones
           finalHighlightedIds = validation.importedIds;
         }
 
-        localStorage.setItem("highlightedDoramaIds", JSON.stringify(finalHighlightedIds));
+        localStorage.setItem(
+          "highlightedDoramaIds",
+          JSON.stringify(finalHighlightedIds),
+        );
 
         // Clear all existing highlights and apply final set
-        const highlightedCards = document.querySelectorAll(".dorama-card.highlighted");
-        highlightedCards.forEach(card => card.classList.remove("highlighted"));
+        const highlightedCards = document.querySelectorAll(
+          ".dorama-card.highlighted",
+        );
+        highlightedCards.forEach((card) => card.classList.remove("highlighted"));
 
         // Apply final highlights
-        finalHighlightedIds.forEach(id => {
-          const card = document.querySelector(`.dorama-card[data-dorama-id='${id}']`);
+        finalHighlightedIds.forEach((id) => {
+          const card = document.querySelector(
+            `.dorama-card[data-dorama-id='${id}']`,
+          );
           if (card) card.classList.add("highlighted");
         });
 
@@ -1068,14 +1123,17 @@ function importHighlightedDoramasFromCSV(file) {
         if (shareStatus) {
           let message;
           if (importMode === "merge") {
-            const addedCount = finalHighlightedIds.length - existingHighlightedIds.length;
-            message = validation.invalidCount > 0
-              ? `已合併 ${validation.validCount} 部日劇 (新增 ${addedCount} 部)，${validation.invalidCount} 部無效`
-              : `已成功合併 ${validation.validCount} 部日劇 (新增 ${addedCount} 部)`;
+            const addedCount =
+              finalHighlightedIds.length - existingHighlightedIds.length;
+            message =
+              validation.invalidCount > 0
+                ? `已合併 ${validation.validCount} 部日劇 (新增 ${addedCount} 部)，${validation.invalidCount} 部無效`
+                : `已成功合併 ${validation.validCount} 部日劇 (新增 ${addedCount} 部)`;
           } else {
-            message = validation.invalidCount > 0
-              ? `已覆寫匯入 ${validation.validCount} 部日劇，${validation.invalidCount} 部無效`
-              : `已成功覆寫匯入 ${validation.validCount} 部日劇`;
+            message =
+              validation.invalidCount > 0
+                ? `已覆寫匯入 ${validation.validCount} 部日劇，${validation.invalidCount} 部無效`
+                : `已成功覆寫匯入 ${validation.validCount} 部日劇`;
           }
           shareStatus.textContent = message;
           setTimeout(() => {
@@ -1085,18 +1143,26 @@ function importHighlightedDoramasFromCSV(file) {
       }
     } catch (error) {
       console.error("Import error:", error);
-      await showAlert("CSV 匯入錯誤", "匯入 CSV 檔案時發生錯誤: " + error.message);
+      await showAlert(
+        "CSV 匯入錯誤",
+        "匯入 CSV 檔案時發生錯誤: " + error.message,
+      );
     }
   };
 
-  reader.onerror = async function() {
+  reader.onerror = async function () {
     await showAlert("讀取錯誤", "讀取 CSV 檔案時發生錯誤");
   };
 
-  reader.readAsText(file, 'utf-8');
+  reader.readAsText(file, "utf-8");
 }
 
-async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRows) {
+async function showImportPreviewDialog(
+  importedDoramas,
+  invalidCount,
+  invalidRows,
+  title = "匯入預覽",
+) {
   return new Promise((resolve) => {
     const modal = document.getElementById("custom-dialog-modal");
     const titleEl = document.getElementById("dialog-title");
@@ -1104,21 +1170,26 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
     const buttonsContainer = document.getElementById("dialog-buttons");
     const closeBtn = document.getElementById("dialog-close-btn");
 
-    titleEl.textContent = "匯入預覽";
+    // Set a higher z-index to ensure this modal appears on top of others
+    modal.style.zIndex = "2001";
+
+    titleEl.textContent = title;
 
     // Get existing highlighted IDs
-    const existingHighlightedIds = new Set(JSON.parse(localStorage.getItem("highlightedDoramaIds")) || []);
+    const existingHighlightedIds = new Set(
+      JSON.parse(localStorage.getItem("highlightedDoramaIds")) || [],
+    );
 
     // Separate new and existing doramas using the new id field
-    const newDoramas = importedDoramas.filter(dorama =>
-      !existingHighlightedIds.has(String(dorama.id))
+    const newDoramas = importedDoramas.filter(
+      (dorama) => !existingHighlightedIds.has(String(dorama.id)),
     );
-    const existingDoramas = importedDoramas.filter(dorama =>
-      existingHighlightedIds.has(String(dorama.id))
+    const existingDoramas = importedDoramas.filter((dorama) =>
+      existingHighlightedIds.has(String(dorama.id)),
     );
 
     // Create preview content
-    let content = `即將匯入 ${importedDoramas.length} 部日劇\n`;
+    let content = `即將標記 ${importedDoramas.length} 部日劇\n`;
     content += `├ 新增：${newDoramas.length} 部\n`;
     content += `└ 已標記：${existingDoramas.length} 部\n\n`;
 
@@ -1133,11 +1204,13 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
         return acc;
       }, {});
 
-      const newSortedYears = Object.keys(newGroupedByYear).sort((a, b) => b - a);
+      const newSortedYears = Object.keys(newGroupedByYear).sort(
+        (a, b) => b - a,
+      );
 
-      newSortedYears.forEach(year => {
+      newSortedYears.forEach((year) => {
         content += `【${year}年】\n`;
-        newGroupedByYear[year].forEach(dorama => {
+        newGroupedByYear[year].forEach((dorama) => {
           content += `  • ${dorama.chineseTitle}\n`;
         });
       });
@@ -1155,11 +1228,13 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
         return acc;
       }, {});
 
-      const existingSortedYears = Object.keys(existingGroupedByYear).sort((a, b) => b - a);
+      const existingSortedYears = Object.keys(existingGroupedByYear).sort(
+        (a, b) => b - a,
+      );
 
-      existingSortedYears.forEach(year => {
+      existingSortedYears.forEach((year) => {
         content += `【${year}年】\n`;
-        existingGroupedByYear[year].forEach(dorama => {
+        existingGroupedByYear[year].forEach((dorama) => {
           content += `  • ${dorama.chineseTitle}\n`;
         });
       });
@@ -1169,7 +1244,7 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
     if (invalidCount > 0) {
       content += `⚠️ ${invalidCount} 行資料無效，將被跳過\n`;
       if (invalidRows.length > 0) {
-        content += `\n錯誤詳情：\n${invalidRows.slice(0, 3).join('\n')}`;
+        content += `\n錯誤詳情：\n${invalidRows.slice(0, 3).join("\n")}`;
         if (invalidRows.length > 3) {
           content += `\n...還有 ${invalidRows.length - 3} 個錯誤`;
         }
@@ -1179,12 +1254,12 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
     messageEl.textContent = content;
 
     // Clear previous buttons
-    buttonsContainer.innerHTML = '';
+    buttonsContainer.innerHTML = "";
 
     // Add buttons
     const buttons = [
       { text: "確認匯入", value: true, class: "dialog-btn-primary" },
-      { text: "取消", value: false, class: "dialog-btn-light" }
+      { text: "取消", value: false, class: "dialog-btn-light" },
     ];
 
     buttons.forEach((button, index) => {
@@ -1211,13 +1286,13 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
 
     // Close on escape
     const handleEscape = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         closeDialog();
         resolve(false);
-        document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener("keydown", handleEscape);
       }
     };
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
 
     // Close on backdrop click
     modal.onclick = (e) => {
@@ -1230,7 +1305,9 @@ async function showImportPreviewDialog(importedDoramas, invalidCount, invalidRow
     function closeDialog() {
       modal.style.display = "none";
       document.body.classList.remove("modal-open");
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
+      // Reset z-index after closing to avoid affecting other dialogs
+      modal.style.zIndex = "";
     }
 
     // Show modal
