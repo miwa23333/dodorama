@@ -191,6 +191,15 @@ doramas {
   id: 929496344
 }
 doramas {
+  chinese_title: "戰鬥！！我們的英雄大集合"
+  japanese_title: "戦え!ぼくらのヒーロー大集合"
+  release_year: 1976
+  dorama_info_id: 30723
+  comment: 0
+  dorama_info_visit_cnt: 617
+  id: 3282328470
+}
+doramas {
   chinese_title: "土曜Wide劇場"
   japanese_title: "土曜ワイド劇場"
   release_year: 1977
@@ -274,6 +283,15 @@ doramas {
   id: 2322318805
 }
 doramas {
+  chinese_title: "細雪"
+  japanese_title: "細雪"
+  release_year: 1980
+  dorama_info_id: 523
+  comment: 0
+  dorama_info_visit_cnt: 10308
+  id: 442643965
+}
+doramas {
   chinese_title: "織機之音"
   japanese_title: "機の音"
   release_year: 1980
@@ -281,6 +299,15 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 3098
   id: 4277494475
+}
+doramas {
+  chinese_title: "源氏物語"
+  japanese_title: "源氏物語"
+  release_year: 1980
+  dorama_info_id: 30299
+  comment: 0
+  dorama_info_visit_cnt: 2381
+  id: 3932476567
 }
 doramas {
   chinese_title: "3年B班金八老師(2)"
@@ -495,14 +522,14 @@ doramas {
   id: 3746833656
 }
 doramas {
-  chinese_title: "妻子們的課外授業"
-  japanese_title: "妻たちの課外授業"
+  chinese_title: "忠臣藏"
+  japanese_title: "忠臣蔵"
   release_year: 1985
-  main_actor: "市毛良枝"
-  dorama_info_id: 4528
+  main_actor: "里見浩太朗"
+  dorama_info_id: 4050
   comment: 0
-  dorama_info_visit_cnt: 9417
-  id: 2212021435
+  dorama_info_visit_cnt: 9941
+  id: 250847688
 }
 doramas {
   chinese_title: "東京七男女故事"
@@ -513,6 +540,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 14256
   id: 3252189075
+}
+doramas {
+  chinese_title: "白虎隊"
+  japanese_title: "白虎隊"
+  release_year: 1986
+  main_actor: "里見浩太朗"
+  dorama_info_id: 4051
+  comment: 0
+  dorama_info_visit_cnt: 11373
+  id: 349384896
 }
 doramas {
   chinese_title: "勇闖洛磯山"
@@ -544,16 +581,6 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 9617
   id: 2275667378
-}
-doramas {
-  chinese_title: "妻子們的危險的關係"
-  japanese_title: "妻たちの危険な関係"
-  release_year: 1986
-  main_actor: "田村正和"
-  dorama_info_id: 4527
-  comment: 0
-  dorama_info_visit_cnt: 8954
-  id: 2055820954
 }
 doramas {
   chinese_title: "我的媽媽是偶像"
