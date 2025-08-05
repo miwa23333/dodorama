@@ -1783,14 +1783,16 @@ async function updateActiveFilterDisplay() {
   const highlightedIds = await getHighlightedIds();
   const dataSourceNames = {
     "dorama_info.txtpb": "全部日劇",
+    "netflix.txtpb": "Netflix",
     "top_100_dorama_info.txtpb": "Top 100 總榜",
     "top_5_lt_2000_dorama_info.txtpb": "每年 Top 5 (2000年前)",
     "top_5_ge_2000_dorama_info.txtpb": "每年 Top 5 (2000年起)",
   };
 
-  const currentDatasetName = dataSourceNames[currentDataSourceFile] || "未知資料集";
+  const currentDatasetName =
+    dataSourceNames[currentDataSourceFile] || "未知資料集";
 
-    if (highlightedIds.length > 0) {
+  if (highlightedIds.length > 0) {
     filtersHtml += `
       <span class="active-filter-pill dataset-info">
         📊 ${currentDatasetName} | 📋 已標記 ${highlightedIds.length} 部
@@ -1877,12 +1879,9 @@ async function updateShareButtonState() {
     ) {
       shareButton.title = `產生已標記日劇觀看清單圖片 (${highlightedIds.length} 部)`;
     } else {
-      const dataSourceNames = {
-        "top_100_dorama_info.txtpb": "Top 100 總榜",
-        "top_5_lt_2000_dorama_info.txtpb": "每年 Top 5 (2000年前)",
-        "top_5_ge_2000_dorama_info.txtpb": "每年 Top 5 (2000年起)",
-      };
-      shareButton.title = `產生 ${dataSourceNames[currentDataSourceFile] || "觀看清單"} 圖片`;
+      shareButton.title = `產生 ${
+        dataSourceNames[currentDataSourceFile] || "觀看清單"
+      } 圖片`;
     }
   } else {
     shareButton.disabled = true;
@@ -2307,6 +2306,12 @@ function setupEventListeners() {
           "top_100_dorama_info.txtpb": {
             title: "日劇 Top 100 觀看清單",
             filename: "top_100_dorama_checklist.png",
+            type: "grid",
+            columns: 10,
+          },
+          "netflix.txtpb": {
+            title: "Netflix 日劇觀看清單",
+            filename: "netflix_dorama_checklist.png",
             type: "grid",
             columns: 10,
           },
