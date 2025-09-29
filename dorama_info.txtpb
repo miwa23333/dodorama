@@ -75266,6 +75266,15 @@ doramas {
   id: 2868125061
 }
 doramas {
+  chinese_title: "母親所在的故鄉"
+  japanese_title: "母の待つ里"
+  release_year: 2024
+  dorama_info_id: 45602
+  comment: 0
+  dorama_info_visit_cnt: 270
+  id: 703762072
+}
+doramas {
   chinese_title: "我的人格合租屋"
   japanese_title: "ぼくの人格シェアハウス"
   release_year: 2024
@@ -75704,6 +75713,17 @@ doramas {
   id: 3485396874
 }
 doramas {
+  chinese_title: "如果黑道上司愛上我"
+  japanese_title: "極道上司に愛されたら"
+  release_year: 2025
+  main_actor: "戶塚祥太"
+  main_actor: "紺野彩夏"
+  dorama_info_id: 45077
+  comment: 0
+  dorama_info_visit_cnt: 3669
+  id: 539647004
+}
+doramas {
   chinese_title: "魔物"
   japanese_title: "魔物"
   release_year: 2025
@@ -75825,6 +75845,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 2950
   id: 1193888588
+}
+doramas {
+  chinese_title: "毛骨悚然撞鬼經驗 夏特別篇2025"
+  japanese_title: "ほんとにあった怖い話 夏の特別編2025"
+  release_year: 2025
+  main_actor: "出口夏希"
+  dorama_info_id: 45318
+  comment: 0
+  dorama_info_visit_cnt: 2882
+  id: 3950996868
 }
 doramas {
   chinese_title: "我的事說來話長～2025・春～"
@@ -75999,6 +76029,16 @@ doramas {
   id: 3184657798
 }
 doramas {
+  chinese_title: "絕對零度~情報犯罪緊急搜査"
+  japanese_title: "絶対零度～情報犯罪緊急捜査～"
+  release_year: 2025
+  main_actor: "澤口靖子"
+  dorama_info_id: 45520
+  comment: 0
+  dorama_info_visit_cnt: 2075
+  id: 4164857331
+}
+doramas {
   chinese_title: "我是整形美人"
   japanese_title: "私は整形美人"
   release_year: 2025
@@ -76018,6 +76058,27 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 1986
   id: 3942798730
+}
+doramas {
+  chinese_title: "照子和瑠衣"
+  japanese_title: "照子と瑠衣"
+  release_year: 2025
+  main_actor: "風吹純"
+  main_actor: "夏木麻里"
+  dorama_info_id: 45084
+  comment: 0
+  dorama_info_visit_cnt: 1973
+  id: 2034092462
+}
+doramas {
+  chinese_title: "一點點超能力"
+  japanese_title: "ちょっとだけエスパー"
+  release_year: 2025
+  main_actor: "大泉洋"
+  dorama_info_id: 45443
+  comment: 0
+  dorama_info_visit_cnt: 1932
+  id: 2511806253
 }
 doramas {
   chinese_title: "愛麗絲的地爐邊"
@@ -76041,6 +76102,16 @@ doramas {
   id: 719231047
 }
 doramas {
+  chinese_title: "THE ROYAL FAMILY"
+  japanese_title: "ザ・ロイヤルファミリー"
+  release_year: 2025
+  main_actor: "妻夫木聰"
+  dorama_info_id: 45346
+  comment: 0
+  dorama_info_visit_cnt: 1857
+  id: 136887060
+}
+doramas {
   chinese_title: "晚餐藍調"
   japanese_title: "晩餐ブルース"
   release_year: 2025
@@ -76060,6 +76131,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 1720
   id: 3451850326
+}
+doramas {
+  chinese_title: "女王偵訊室5"
+  japanese_title: "緊急取調室 第5シーズン"
+  release_year: 2025
+  main_actor: "天海祐希"
+  dorama_info_id: 45422
+  comment: 1
+  dorama_info_visit_cnt: 1705
+  id: 499083316
 }
 doramas {
   chinese_title: "地震之後"
@@ -76111,6 +76192,17 @@ doramas {
   id: 3188754975
 }
 doramas {
+  chinese_title: "有本事換你來做啊！"
+  japanese_title: "じゃあ、あんたが作ってみろよ"
+  release_year: 2025
+  main_actor: "夏帆"
+  main_actor: "竹內涼真"
+  dorama_info_id: 45267
+  comment: 0
+  dorama_info_visit_cnt: 1599
+  id: 3411843719
+}
+doramas {
   chinese_title: "Gold sunset"
   japanese_title: "ゴールドサンセット"
   release_year: 2025
@@ -76130,6 +76222,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 1472
   id: 582365022
+}
+doramas {
+  chinese_title: "MISS KING"
+  japanese_title: "MISS KING / ミス・キング"
+  release_year: 2025
+  main_actor: "NON"
+  dorama_info_id: 45205
+  comment: 0
+  dorama_info_visit_cnt: 1469
+  id: 2236424814
 }
 doramas {
   chinese_title: "DOPE ～麻藥取締部特搜課～"
@@ -76289,6 +76391,17 @@ doramas {
   id: 2508615909
 }
 doramas {
+  chinese_title: "假媽咪"
+  japanese_title: "フェイクマミー"
+  release_year: 2025
+  main_actor: "波瑠"
+  main_actor: "川榮李奈"
+  dorama_info_id: 45323
+  comment: 0
+  dorama_info_visit_cnt: 1285
+  id: 2505150627
+}
+doramas {
   chinese_title: "飛鳥診所今天也下雨"
   japanese_title: "飛鳥クリニックは今日も雨"
   release_year: 2025
@@ -76307,6 +76420,27 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 1270
   id: 3661874861
+}
+doramas {
+  chinese_title: "即使所有的戀愛都將結束"
+  japanese_title: "すべての恋が終わるとしても"
+  release_year: 2025
+  main_actor: "葵若菜"
+  main_actor: "神尾楓珠"
+  dorama_info_id: 45353
+  comment: 0
+  dorama_info_visit_cnt: 1267
+  id: 3280272863
+}
+doramas {
+  chinese_title: "如果世界是舞台，後台會在哪裡"
+  japanese_title: "もしもこの世が舞台なら、楽屋はどこにあるのだろう"
+  release_year: 2025
+  main_actor: "菅田將暉"
+  dorama_info_id: 45537
+  comment: 0
+  dorama_info_visit_cnt: 1237
+  id: 3759507769
 }
 doramas {
   chinese_title: "放晴真好 ～HARETARA IINE～"
@@ -76369,6 +76503,16 @@ doramas {
   id: 282910874
 }
 doramas {
+  chinese_title: "Synanthrope"
+  japanese_title: "シナントロープ"
+  release_year: 2025
+  main_actor: "水上恒司"
+  dorama_info_id: 45390
+  comment: 0
+  dorama_info_visit_cnt: 1138
+  id: 710487357
+}
+doramas {
   chinese_title: "花牌情緣-旅程-"
   japanese_title: "ちはやふる-めぐり-"
   release_year: 2025
@@ -76400,6 +76544,27 @@ doramas {
   id: 144993303
 }
 doramas {
+  chinese_title: "新東京水上警察"
+  japanese_title: "新東京水上警察"
+  release_year: 2025
+  main_actor: "佐藤隆太"
+  dorama_info_id: 45413
+  comment: 0
+  dorama_info_visit_cnt: 1089
+  id: 274026434
+}
+doramas {
+  chinese_title: "海洋之戀 ～愛的居場所～"
+  japanese_title: "Love Sea～愛の居場所～"
+  release_year: 2025
+  main_actor: "國上將大"
+  main_actor: "西銘駿"
+  dorama_info_id: 45138
+  comment: 0
+  dorama_info_visit_cnt: 1085
+  id: 4008468145
+}
+doramas {
   chinese_title: "阿波羅之歌"
   japanese_title: "アポロの歌"
   release_year: 2025
@@ -76411,6 +76576,27 @@ doramas {
   id: 2593191623
 }
 doramas {
+  chinese_title: "好孩子壞孩子"
+  japanese_title: "良いこと悪いこと"
+  release_year: 2025
+  main_actor: "間宮祥太朗"
+  main_actor: "新木優子"
+  dorama_info_id: 45503
+  comment: 0
+  dorama_info_visit_cnt: 1044
+  id: 3116333919
+}
+doramas {
+  chinese_title: "Coach"
+  japanese_title: "コーチ"
+  release_year: 2025
+  main_actor: "唐澤壽明"
+  dorama_info_id: 45484
+  comment: 0
+  dorama_info_visit_cnt: 1041
+  id: 738459660
+}
+doramas {
   chinese_title: "靈魂之伴"
   japanese_title: "ソウルメイト"
   release_year: 2025
@@ -76420,6 +76606,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 1032
   id: 1154720770
+}
+doramas {
+  chinese_title: "小時候，神明在身邊"
+  japanese_title: "小さい頃は、神様がいて"
+  release_year: 2025
+  main_actor: "北村有起哉"
+  dorama_info_id: 45559
+  comment: 1
+  dorama_info_visit_cnt: 1026
+  id: 832741285
 }
 doramas {
   chinese_title: "愛的，學校。"
@@ -76472,6 +76668,16 @@ doramas {
   id: 3219856888
 }
 doramas {
+  chinese_title: "寫真樂園"
+  japanese_title: "グラぱらっ"
+  release_year: 2025
+  main_actor: "北野瑠華"
+  dorama_info_id: 45192
+  comment: 0
+  dorama_info_visit_cnt: 962
+  id: 266826111
+}
+doramas {
   chinese_title: "佔領電視台"
   japanese_title: "放送局占拠"
   release_year: 2025
@@ -76522,6 +76728,17 @@ doramas {
   id: 213879641
 }
 doramas {
+  chinese_title: "殺了奪走女兒性命的傢伙是犯罪嗎？"
+  japanese_title: "娘の命を奪ったヤツを殺すのは罪ですか？"
+  release_year: 2025
+  main_actor: "齊藤京子"
+  main_actor: "水野美紀"
+  dorama_info_id: 45567
+  comment: 0
+  dorama_info_visit_cnt: 840
+  id: 702815499
+}
+doramas {
   chinese_title: "怪變"
   japanese_title: "ばけばけ"
   release_year: 2025
@@ -76530,6 +76747,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 838
   id: 3120425729
+}
+doramas {
+  chinese_title: "咱們家"
+  japanese_title: "ぼくたちん家"
+  release_year: 2025
+  main_actor: "及川光博"
+  dorama_info_id: 45421
+  comment: 0
+  dorama_info_visit_cnt: 826
+  id: 1171090484
 }
 doramas {
   chinese_title: "滑雪場飯"
@@ -76584,6 +76811,28 @@ doramas {
   id: 1186817458
 }
 doramas {
+  chinese_title: "妳是特別的"
+  japanese_title: "君がトクベツ"
+  release_year: 2025
+  main_actor: "畑芽育"
+  main_actor: "大橋和也"
+  dorama_info_id: 45144
+  comment: 0
+  dorama_info_visit_cnt: 751
+  id: 3652707452
+}
+doramas {
+  chinese_title: "ESCAPE ～那本該是一場綁架～"
+  japanese_title: "ESCAPE～それは誘拐のはずだった～"
+  release_year: 2025
+  main_actor: "櫻田日和"
+  main_actor: "佐野勇斗"
+  dorama_info_id: 45550
+  comment: 0
+  dorama_info_visit_cnt: 741
+  id: 1960958935
+}
+doramas {
   chinese_title: "麻煩的婚約者"
   japanese_title: "きみは面倒な婚約者"
   release_year: 2025
@@ -76636,6 +76885,16 @@ doramas {
   id: 4264990078
 }
 doramas {
+  chinese_title: "放課後的病歷表2025秋"
+  japanese_title: "放課後カルテ2025秋"
+  release_year: 2025
+  main_actor: "松下洸平"
+  dorama_info_id: 45228
+  comment: 0
+  dorama_info_visit_cnt: 657
+  id: 2429127409
+}
+doramas {
   chinese_title: "大追跡"
   japanese_title: "大追跡～警視庁SSBC強行犯係～"
   release_year: 2025
@@ -76673,6 +76932,26 @@ doramas {
   id: 2570108511
 }
 doramas {
+  chinese_title: "我推成上司 全速前進"
+  japanese_title: "推しが上司になりまして フルスロットル"
+  release_year: 2025
+  main_actor: "鈴木愛理"
+  dorama_info_id: 45357
+  comment: 0
+  dorama_info_visit_cnt: 633
+  id: 1033572707
+}
+doramas {
+  chinese_title: "戀愛警護24時 season2"
+  japanese_title: "恋する警護24時 season2"
+  release_year: 2025
+  main_actor: "岩本照"
+  dorama_info_id: 45521
+  comment: 0
+  dorama_info_visit_cnt: 632
+  id: 528762151
+}
+doramas {
   chinese_title: "武士生死鬥"
   japanese_title: "イクサガミ"
   release_year: 2025
@@ -76681,6 +76960,17 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 631
   id: 930642764
+}
+doramas {
+  chinese_title: "殺死你的旅程"
+  japanese_title: "あなたを殺す旅"
+  release_year: 2025
+  main_actor: "和田雅成"
+  main_actor: "高橋大翔"
+  dorama_info_id: 45467
+  comment: 0
+  dorama_info_visit_cnt: 629
+  id: 679424471
 }
 doramas {
   chinese_title: "馬格達拉屋的瑪利亞"
@@ -76776,6 +77066,16 @@ doramas {
   id: 3312306308
 }
 doramas {
+  chinese_title: "如果世界上沒有「戀愛」的話"
+  japanese_title: "もしも世界に『レンアイ』がなかったら"
+  release_year: 2025
+  main_actor: "島崎遙香"
+  dorama_info_id: 45105
+  comment: 0
+  dorama_info_visit_cnt: 562
+  id: 4155481760
+}
+doramas {
   chinese_title: "青空啤酒"
   japanese_title: "あおぞらビール"
   release_year: 2025
@@ -76794,6 +77094,37 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 544
   id: 288036652
+}
+doramas {
+  chinese_title: "相棒Season24"
+  japanese_title: "相棒Season24"
+  release_year: 2025
+  main_actor: "水谷豐"
+  dorama_info_id: 45464
+  comment: 0
+  dorama_info_visit_cnt: 534
+  id: 3371075301
+}
+doramas {
+  chinese_title: "人類標本"
+  japanese_title: "人類標本"
+  release_year: 2025
+  main_actor: "西島秀俊"
+  dorama_info_id: 45409
+  comment: 0
+  dorama_info_visit_cnt: 532
+  id: 3323548388
+}
+doramas {
+  chinese_title: "爸爸與爹地的家常飯"
+  japanese_title: "パパと親父のウチご飯"
+  release_year: 2025
+  main_actor: "松島聰"
+  main_actor: "白洲迅"
+  dorama_info_id: 45561
+  comment: 0
+  dorama_info_visit_cnt: 523
+  id: 2714630217
 }
 doramas {
   chinese_title: "非快速眼動之窗2025新春"
@@ -76815,6 +77146,17 @@ doramas {
   id: 2880996295
 }
 doramas {
+  chinese_title: "25時, 赤坂見 Season2"
+  japanese_title: "25時、赤坂で Season2"
+  release_year: 2025
+  main_actor: "駒木根葵汰"
+  main_actor: "新原泰佑"
+  dorama_info_id: 45072
+  comment: 0
+  dorama_info_visit_cnt: 488
+  id: 3976237800
+}
+doramas {
   chinese_title: "午夜路邊攤"
   japanese_title: "ミッドナイト屋台～ラ・ボンノォ～"
   release_year: 2025
@@ -76823,6 +77165,27 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 477
   id: 833654054
+}
+doramas {
+  chinese_title: "閃爍的愛情 Season1"
+  japanese_title: "ストロボ・エッジ Season1"
+  release_year: 2025
+  main_actor: "福本莉子"
+  main_actor: "高橋恭平"
+  dorama_info_id: 45285
+  comment: 0
+  dorama_info_visit_cnt: 467
+  id: 2613968285
+}
+doramas {
+  chinese_title: "到掛掉也要爆紅"
+  japanese_title: "死ぬまでバズってろ！！"
+  release_year: 2025
+  main_actor: "與田祐希"
+  dorama_info_id: 45435
+  comment: 0
+  dorama_info_visit_cnt: 467
+  id: 1260725883
 }
 doramas {
   chinese_title: "離婚女律師 Spider 第2季 ～謊言與背叛編～"
@@ -76907,6 +77270,17 @@ doramas {
   id: 2558564238
 }
 doramas {
+  chinese_title: "午夜路邊攤2"
+  japanese_title: "ミッドナイト屋台2～ル・モンドゥ～"
+  release_year: 2025
+  main_actor: "神山智洋"
+  main_actor: "中村海人"
+  dorama_info_id: 45229
+  comment: 0
+  dorama_info_visit_cnt: 432
+  id: 3531274621
+}
+doramas {
   chinese_title: "TOKAGE 警視廳特殊犯搜查係"
   japanese_title: "TOKAGE 警視庁特殊犯捜査係"
   release_year: 2025
@@ -76926,6 +77300,18 @@ doramas {
   id: 2342138763
 }
 doramas {
+  chinese_title: "地下偶像殺人事件"
+  japanese_title: "推しの殺人"
+  release_year: 2025
+  main_actor: "田邊桃子"
+  main_actor: "橫田真悠"
+  main_actor: "林芽亞里"
+  dorama_info_id: 45536
+  comment: 0
+  dorama_info_visit_cnt: 418
+  id: 548570175
+}
+doramas {
   chinese_title: "獨活女子的守則5"
   japanese_title: "ソロ活女子のススメ5"
   release_year: 2025
@@ -76934,6 +77320,27 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 414
   id: 628013411
+}
+doramas {
+  chinese_title: "醜聞前夕"
+  japanese_title: "スキャンダルイブ"
+  release_year: 2025
+  main_actor: "柴崎幸"
+  dorama_info_id: 45554
+  comment: 0
+  dorama_info_visit_cnt: 411
+  id: 91860506
+}
+doramas {
+  chinese_title: "我在學校旅行中被分到了一個糟糕的小組"
+  japanese_title: "修学旅行で仲良くないグループに入りました"
+  release_year: 2025
+  main_actor: "藤本洸大"
+  main_actor: "簡秀吉"
+  dorama_info_id: 45368
+  comment: 0
+  dorama_info_visit_cnt: 406
+  id: 2252370503
 }
 doramas {
   chinese_title: "復仇間諜"
@@ -76945,6 +77352,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 403
   id: 2291138456
+}
+doramas {
+  chinese_title: "小荳荳失落青春記"
+  japanese_title: "トットの欠落青春記"
+  release_year: 2025
+  main_actor: "蘆田愛菜"
+  dorama_info_id: 45262
+  comment: 0
+  dorama_info_visit_cnt: 387
+  id: 2445114453
 }
 doramas {
   chinese_title: "量產型Ruka"
@@ -77010,6 +77427,26 @@ doramas {
   id: 2721845360
 }
 doramas {
+  chinese_title: "那年夏天的共犯者"
+  japanese_title: "ひと夏の共犯者"
+  release_year: 2025
+  main_actor: "橋本將生"
+  dorama_info_id: 45515
+  comment: 0
+  dorama_info_visit_cnt: 370
+  id: 3603197709
+}
+doramas {
+  chinese_title: "與你的吻將永遠持續"
+  japanese_title: "君としたキスはいつまでも"
+  release_year: 2025
+  main_actor: "小關裕太"
+  dorama_info_id: 45549
+  comment: 0
+  dorama_info_visit_cnt: 362
+  id: 3337093704
+}
+doramas {
   chinese_title: "看守的流派"
   japanese_title: "看守の流儀"
   release_year: 2025
@@ -77018,6 +77455,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 360
   id: 2149749248
+}
+doramas {
+  chinese_title: "錯的是你"
+  japanese_title: "悪いのはあなたです"
+  release_year: 2025
+  main_actor: "工藤美櫻"
+  dorama_info_id: 45562
+  comment: 0
+  dorama_info_visit_cnt: 355
+  id: 2541451359
 }
 doramas {
   chinese_title: "柴的法則"
@@ -77037,6 +77484,26 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 337
   id: 920146263
+}
+doramas {
+  chinese_title: "療傷遊戲"
+  japanese_title: "セラピーゲーム"
+  release_year: 2025
+  dorama_info_id: 45510
+  comment: 0
+  dorama_info_visit_cnt: 334
+  id: 2313842783
+}
+doramas {
+  chinese_title: "送上甜美的離婚"
+  japanese_title: "おいしい離婚届けます"
+  release_year: 2025
+  main_actor: "前田公輝"
+  main_actor: "水澤林太郎"
+  dorama_info_id: 45548
+  comment: 0
+  dorama_info_visit_cnt: 330
+  id: 187774119
 }
 doramas {
   chinese_title: "金牌救援 Stove League"
@@ -77089,6 +77556,27 @@ doramas {
   id: 1649546610
 }
 doramas {
+  chinese_title: "逃避現實二人組"
+  japanese_title: "ふたりエスケープ"
+  release_year: 2025
+  main_actor: "岩本蓮加"
+  main_actor: "冨里奈央"
+  dorama_info_id: 45526
+  comment: 0
+  dorama_info_visit_cnt: 305
+  id: 337776812
+}
+doramas {
+  chinese_title: "大叔的內褲怎樣都行！SP"
+  japanese_title: "おっさんのパンツがなんだっていいじゃないか!SP"
+  release_year: 2025
+  main_actor: "原田泰造"
+  dorama_info_id: 45113
+  comment: 0
+  dorama_info_visit_cnt: 304
+  id: 1046047938
+}
+doramas {
   chinese_title: "Laundering"
   japanese_title: "ロンダリ ング"
   release_year: 2025
@@ -77109,6 +77597,25 @@ doramas {
   id: 898985894
 }
 doramas {
+  chinese_title: "終活合租屋"
+  japanese_title: "終活シェアハウス"
+  release_year: 2025
+  dorama_info_id: 45417
+  comment: 0
+  dorama_info_visit_cnt: 299
+  id: 449499195
+}
+doramas {
+  chinese_title: "217圓的畫"
+  japanese_title: "217円の絵"
+  release_year: 2025
+  main_actor: "風間俊介"
+  dorama_info_id: 45509
+  comment: 0
+  dorama_info_visit_cnt: 296
+  id: 3617677650
+}
+doramas {
   chinese_title: "彩香最愛弘子前輩 2nd Stage"
   japanese_title: "彩香ちゃんは弘子先輩に恋してる 2nd Stage"
   release_year: 2025
@@ -77120,6 +77627,15 @@ doramas {
   id: 496420717
 }
 doramas {
+  chinese_title: "託生君系列 －Drama－"
+  japanese_title: "タクミくんシリーズ －Drama－"
+  release_year: 2025
+  dorama_info_id: 45447
+  comment: 0
+  dorama_info_visit_cnt: 277
+  id: 3484222794
+}
+doramas {
   chinese_title: "世界上最早的春天"
   japanese_title: "世界で一番早い春"
   release_year: 2025
@@ -77129,6 +77645,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 275
   id: 2973848999
+}
+doramas {
+  chinese_title: "實況野球劇2025"
+  japanese_title: "パワプロドラマ2025～平凡な新社会人の俺がサクセスした話～"
+  release_year: 2025
+  main_actor: "鈴木福"
+  dorama_info_id: 45488
+  comment: 0
+  dorama_info_visit_cnt: 270
+  id: 1799647082
 }
 doramas {
   chinese_title: "SINSIN AND THE MOUSE"
@@ -77158,6 +77684,27 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 252
   id: 3113141140
+}
+doramas {
+  chinese_title: "宣傳遊戲"
+  japanese_title: "プロパガンダゲーム"
+  release_year: 2025
+  main_actor: "山下幸輝"
+  main_actor: "松本怜生"
+  dorama_info_id: 45799
+  comment: 0
+  dorama_info_visit_cnt: 250
+  id: 619236367
+}
+doramas {
+  chinese_title: "PUNKS△TRIANGLE"
+  japanese_title: "PUNKS△TRIANGLE"
+  release_year: 2025
+  main_actor: "長野凌大"
+  dorama_info_id: 45114
+  comment: 0
+  dorama_info_visit_cnt: 242
+  id: 3356579571
 }
 doramas {
   chinese_title: "夜間路標"
@@ -77231,6 +77778,15 @@ doramas {
   id: 929349026
 }
 doramas {
+  chinese_title: "平屋慢生活"
+  japanese_title: "ひらやすみ"
+  release_year: 2025
+  dorama_info_id: 45257
+  comment: 0
+  dorama_info_visit_cnt: 194
+  id: 2390252137
+}
+doramas {
   chinese_title: "傳遞八月之聲的男人"
   japanese_title: "八月の声を運ぶ男"
   release_year: 2025
@@ -77272,6 +77828,16 @@ doramas {
   id: 3845318039
 }
 doramas {
+  chinese_title: "絕對成為BL的世界VS絕對不想成為BL的男人 最終季"
+  japanese_title: "絶対BLになる世界VS絶対BLになりたくない男 ファイナル"
+  release_year: 2025
+  main_actor: "犬飼貴丈"
+  dorama_info_id: 45498
+  comment: 0
+  dorama_info_visit_cnt: 158
+  id: 1883998308
+}
+doramas {
   chinese_title: "所謂的戀愛就是要色香味俱全"
   japanese_title: "ただの恋愛なんかできっこない"
   release_year: 2025
@@ -77280,6 +77846,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 156
   id: 3651734587
+}
+doramas {
+  chinese_title: "赤影"
+  japanese_title: "赤影"
+  release_year: 2025
+  main_actor: "佐藤大樹"
+  dorama_info_id: 45757
+  comment: 0
+  dorama_info_visit_cnt: 151
+  id: 1977244146
 }
 doramas {
   chinese_title: "正港男一匹 第二季"
