@@ -183,6 +183,26 @@ doramas {
   id: 3578779047
 }
 doramas {
+  chinese_title: "派遣女王"
+  japanese_title: "ハケンの品格"
+  release_year: 2007
+  main_actor: "篠原涼子"
+  dorama_info_id: 1062
+  comment: 39
+  dorama_info_visit_cnt: 362554
+  id: 3732979842
+}
+doramas {
+  chinese_title: "工作一姐"
+  japanese_title: "働きマン"
+  release_year: 2007
+  main_actor: "菅野美穗"
+  dorama_info_id: 1156
+  comment: 15
+  dorama_info_visit_cnt: 162826
+  id: 2732058474
+}
+doramas {
   chinese_title: "不良學園"
   japanese_title: "ROOKIES～ルーキーズ～"
   release_year: 2008
@@ -221,6 +241,26 @@ doramas {
   comment: 75
   dorama_info_visit_cnt: 325265
   id: 1897370096
+}
+doramas {
+  chinese_title: "東京DOGS"
+  japanese_title: "東京DOGS"
+  release_year: 2009
+  main_actor: "小栗旬"
+  dorama_info_id: 3329
+  comment: 68
+  dorama_info_visit_cnt: 267001
+  id: 4011332219
+}
+doramas {
+  chinese_title: "深夜食堂"
+  japanese_title: "深夜食堂"
+  release_year: 2009
+  main_actor: "小林薰"
+  dorama_info_id: 3334
+  comment: 16
+  dorama_info_visit_cnt: 153010
+  id: 2003502428
 }
 doramas {
   chinese_title: "超能力事件簿 SPEC"
@@ -315,6 +355,16 @@ doramas {
   id: 2814538015
 }
 doramas {
+  chinese_title: "戀仲"
+  japanese_title: "恋仲"
+  release_year: 2015
+  main_actor: "福士蒼汰"
+  dorama_info_id: 14872
+  comment: 9
+  dorama_info_visit_cnt: 119070
+  id: 1679403485
+}
+doramas {
   chinese_title: "偽裝夫婦"
   japanese_title: "偽装の夫婦"
   release_year: 2015
@@ -365,6 +415,16 @@ doramas {
   id: 53420994
 }
 doramas {
+  chinese_title: "戀習曲"
+  japanese_title: "ラヴソング"
+  release_year: 2016
+  main_actor: "福山雅治"
+  dorama_info_id: 16688
+  comment: 22
+  dorama_info_visit_cnt: 85709
+  id: 589718603
+}
+doramas {
   chinese_title: "愛情起床號"
   japanese_title: "グッドモーニング・コール"
   release_year: 2016
@@ -385,16 +445,6 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 20189
   id: 557508243
-}
-doramas {
-  chinese_title: "深夜食堂：東京故事"
-  japanese_title: "深夜食堂～Tokyo Stories～"
-  release_year: 2016
-  main_actor: "小林薰"
-  dorama_info_id: 17523
-  comment: 4
-  dorama_info_visit_cnt: 18814
-  id: 1740187313
 }
 doramas {
   chinese_title: "A LIFE ～心愛的人～"
@@ -475,26 +525,6 @@ doramas {
   comment: 3
   dorama_info_visit_cnt: 26075
   id: 852837240
-}
-doramas {
-  chinese_title: "100萬元女人們"
-  japanese_title: "100万円の女たち"
-  release_year: 2017
-  main_actor: "野田洋次郎"
-  dorama_info_id: 19771
-  comment: 2
-  dorama_info_visit_cnt: 20497
-  id: 2209354123
-}
-doramas {
-  chinese_title: "FF14光之老爸"
-  japanese_title: "ファイナルファンタジーXIV 光のお父さん"
-  release_year: 2017
-  main_actor: "千葉雄大"
-  dorama_info_id: 19522
-  comment: 3
-  dorama_info_visit_cnt: 15797
-  id: 1463264140
 }
 doramas {
   chinese_title: "愛情起床號2"
@@ -839,16 +869,6 @@ doramas {
   id: 1764309745
 }
 doramas {
-  chinese_title: "間諜之妻"
-  japanese_title: "スパイの妻"
-  release_year: 2020
-  main_actor: "蒼井優"
-  dorama_info_id: 28744
-  comment: 0
-  dorama_info_visit_cnt: 5499
-  id: 3451774138
-}
-doramas {
   chinese_title: "在無愛之森放聲吶喊：深入密林"
   japanese_title: "愛なき森で叫べ : Deep Cut"
   release_year: 2020
@@ -877,16 +897,6 @@ doramas {
   comment: 17
   dorama_info_visit_cnt: 50332
   id: 20656840
-}
-doramas {
-  chinese_title: "大豆田永久子與三名前夫"
-  japanese_title: "大豆田とわ子と三人の元夫"
-  release_year: 2021
-  main_actor: "松隆子"
-  dorama_info_id: 33053
-  comment: 3
-  dorama_info_visit_cnt: 42680
-  id: 763803883
 }
 doramas {
   chinese_title: "我家的故事"
@@ -1628,6 +1638,47 @@ doramas {
   id: 2264196014
 }
 doramas {
+  chinese_title: "一點點超能力"
+  japanese_title: "ちょっとだけエスパー"
+  release_year: 2025
+  main_actor: "大泉洋"
+  dorama_info_id: 45443
+  comment: 0
+  dorama_info_visit_cnt: 1932
+  id: 2511806253
+}
+doramas {
+  chinese_title: "THE ROYAL FAMILY"
+  japanese_title: "ザ・ロイヤルファミリー"
+  release_year: 2025
+  main_actor: "妻夫木聰"
+  dorama_info_id: 45346
+  comment: 0
+  dorama_info_visit_cnt: 1857
+  id: 136887060
+}
+doramas {
+  chinese_title: "浪漫匿名者"
+  japanese_title: "匿名の恋人たち"
+  release_year: 2025
+  main_actor: "小栗旬"
+  main_actor: "韓孝周"
+  dorama_info_id: 42261
+  comment: 0
+  dorama_info_visit_cnt: 1638
+  id: 3630331834
+}
+doramas {
+  chinese_title: "MISS KING"
+  japanese_title: "MISS KING / ミス・キング"
+  release_year: 2025
+  main_actor: "NON"
+  dorama_info_id: 45205
+  comment: 0
+  dorama_info_visit_cnt: 1469
+  id: 2236424814
+}
+doramas {
   chinese_title: "三人夫婦"
   japanese_title: "三人夫婦"
   release_year: 2025
@@ -1648,6 +1699,26 @@ doramas {
   id: 217002940
 }
 doramas {
+  chinese_title: "如果世界是舞台，後台會在哪裡"
+  japanese_title: "もしもこの世が舞台なら、楽屋はどこにあるのだろう"
+  release_year: 2025
+  main_actor: "菅田將暉"
+  dorama_info_id: 45537
+  comment: 0
+  dorama_info_visit_cnt: 1237
+  id: 3759507769
+}
+doramas {
+  chinese_title: "花牌情緣-旅程-"
+  japanese_title: "ちはやふる-めぐり-"
+  release_year: 2025
+  main_actor: "當真AMI"
+  dorama_info_id: 44259
+  comment: 0
+  dorama_info_visit_cnt: 1137
+  id: 563218470
+}
+doramas {
   chinese_title: "愛的，學校。"
   japanese_title: "愛の、がっこう。"
   release_year: 2025
@@ -1656,6 +1727,16 @@ doramas {
   comment: 0
   dorama_info_visit_cnt: 990
   id: 2890268147
+}
+doramas {
+  chinese_title: "咱們家"
+  japanese_title: "ぼくたちん家"
+  release_year: 2025
+  main_actor: "及川光博"
+  dorama_info_id: 45421
+  comment: 0
+  dorama_info_visit_cnt: 826
+  id: 1171090484
 }
 doramas {
   chinese_title: "灰姑娘壁櫥"
