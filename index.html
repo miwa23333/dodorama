@@ -13,7 +13,17 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dodorama</title>
+    <title>Dodorama｜日劇資訊整理與觀劇清單工具</title>
+    <meta name="description" content="Dodorama 收錄七千多部日劇，可查詢每年 Top 5、歷年 Top 100 與 Netflix 上架作品，用劇名、主演或年份篩選，標記看過的日劇並產生觀劇清單圖片，支援 CSV 匯入匯出。免費、不需註冊。">
+    <meta name="author" content="miwa23333">
+    <link rel="canonical" href="https://www.miwa23333.xyz/dodorama/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="miwa23333">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:title" content="Dodorama｜日劇資訊整理與觀劇清單工具">
+    <meta property="og:description" content="查詢歷年熱門日劇、標記看過的作品並產生觀劇清單圖片。">
+    <meta property="og:url" content="https://www.miwa23333.xyz/dodorama/">
+    <link rel="icon" href="https://www.miwa23333.xyz/favicon.ico">
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -165,22 +175,34 @@
     </div>
     <footer
       style="
-        text-align: center;
-        padding: 20px;
+        max-width: 960px;
+        margin: 40px auto 0;
+        padding: 20px 16px;
         color: #666;
         font-size: 14px;
+        line-height: 1.7;
         border-top: 1px solid #eee;
-        margin-top: 40px;
       "
     >
-      資料來源:
-      <a
-        href="http://dorama.info/"
-        target="_blank"
-        rel="noopener"
-        style="color: #007bff; text-decoration: none"
-        >dorama.info</a
-      >
+      <h2 style="font-size: 16px; margin: 0 0 8px; color: #444">關於 Dodorama</h2>
+      <p style="margin: 0 0 8px">
+        Dodorama 是
+        <a href="https://www.miwa23333.xyz/" style="color: #007bff; text-decoration: none">miwa23333</a>
+        做的日劇資訊整理工具。左上角的篩選選單可以用劇名或主演搜尋、限制年份範圍，並切換「全部」、「Netflix」、「每年 Top 5」與「Top 100 總榜」等資料集；點擊卡片可以標記為看過，右上角選單裡的「產生清單圖片」會把看過的日劇依年份排成一張圖片，也可以把標記匯出成 CSV、從 CSV 匯入，或用「解析檔案」把文字檔裡的舊清單比對進來。
+      </p>
+      <p style="margin: 0 0 8px">
+        標記只會存在你的瀏覽器（localStorage）裡，不會上傳到任何伺服器，也不需要註冊帳號。
+      </p>
+      <p style="margin: 0">
+        <a href="https://www.miwa23333.xyz/posts/dodorama/" style="color: #007bff; text-decoration: none">完整使用說明</a>
+        ·
+        <a href="https://www.miwa23333.xyz/" style="color: #007bff; text-decoration: none">回到 miwa23333 首頁</a>
+        ·
+        <a href="https://github.com/miwa23333/dodorama" style="color: #007bff; text-decoration: none">GitHub 原始碼</a>
+        ·
+        資料來源:
+        <a href="http://dorama.info/" target="_blank" rel="noopener" style="color: #007bff; text-decoration: none">dorama.info</a>
+      </p>
     </footer>
 
     <script src="app.js"></script>
